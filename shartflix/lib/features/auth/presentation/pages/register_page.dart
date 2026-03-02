@@ -60,7 +60,14 @@ class _RegisterViewState extends State<_RegisterView> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          context.go(AppRoutes.home);
+          // Show success and go to profile so user can upload photo
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.registerSuccess),
+              backgroundColor: AppColors.success,
+            ),
+          );
+          context.go(AppRoutes.profile);
         } else if (state is AuthFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

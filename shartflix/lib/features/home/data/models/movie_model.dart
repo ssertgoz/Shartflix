@@ -6,24 +6,37 @@ class MovieModel extends MovieEntity {
     required super.title,
     required super.description,
     required super.posterUrl,
+    super.images,
     super.isFavorite,
   });
 
   factory MovieModel.fromJson(Map<String, dynamic> json) {
+    final id = json['id'] as String? ?? json['_id']?.toString() ?? '';
+
+    final rawImages = json['Images'] as List<dynamic>? ?? const [];
+    final images = rawImages.whereType<String>().toList();
+
+    // Prefer Poster; fall back to first image if Poster is empty
+    final rawPoster = (json['Poster'] ?? json['posterUrl'] ?? '') as String;
+    final posterUrl = rawPoster.isNotEmpty ? rawPoster : (images.isNotEmpty ? images.first : '');
+
     return MovieModel(
-      id: json['id'] as String? ?? '',
-      title: json['title'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      posterUrl: json['posterUrl'] as String? ?? '',
+      id: id,
+      title: (json['Title'] ?? json['title'] ?? '') as String,
+      description: (json['Plot'] ?? json['description'] ?? '') as String,
+      posterUrl: posterUrl,
+      images: images,
+      isFavorite: json['isFavorite'] as bool? ?? false,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'title': title,
-      'description': description,
-      'posterUrl': posterUrl,
+      'Title': title,
+      'Plot': description,
+      'Poster': posterUrl,
+      'Images': images,
     };
   }
 }

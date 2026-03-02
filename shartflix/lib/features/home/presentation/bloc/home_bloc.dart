@@ -37,6 +37,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(state.copyWith(status: HomeStatus.loadingMore));
     }
 
+    // Seed favorite IDs from the server on the first page load
+    Set<String> favIds = {...state.favoriteIds};
+    if (event.page == 1) {
+      final favResult = await getFavorites();
+      favResult.fold(
+        (_) {}, // keep existing local ids on error
+        (favs) => favIds = favs.map((m) => m.id).toSet(),
+      );
+    }
+
     final result = await getMovies(event.page);
 
     result.fold(
@@ -52,11 +62,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             ? data.movies
             : [...state.movies, ...data.movies];
 
-        final favIds = {...state.favoriteIds};
-
         emit(state.copyWith(
           status: HomeStatus.success,
-          movies: updatedMovies.map((m) => m.copyWith(isFavorite: favIds.contains(m.id))).toList(),
+          movies: updatedMovies
+              .map((m) => m.copyWith(isFavorite: favIds.contains(m.id)))
+              .toList(),
           currentPage: data.currentPage,
           totalPages: data.totalPages,
           hasReachedMax: data.currentPage >= data.totalPages,
@@ -70,24 +80,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     RefreshMovies event,
     Emitter<HomeState> emit,
   ) async {
+    // Reset state and re-trigger a full page-1 load (which now fetches favorites too)
     emit(const HomeState());
     add(const FetchMovies(page: 1));
-
-    // Also refresh favorites
-    final favResult = await getFavorites();
-    favResult.fold(
-      (_) {},
-      (favorites) {
-        final favIds = favorites.map((m) => m.id).toSet();
-        final updatedMovies = state.movies
-            .map((m) => m.copyWith(isFavorite: favIds.contains(m.id)))
-            .toList();
-        emit(state.copyWith(
-          favoriteIds: favIds,
-          movies: updatedMovies,
-        ));
-      },
-    );
   }
 
   Future<void> _onToggleFavorite(

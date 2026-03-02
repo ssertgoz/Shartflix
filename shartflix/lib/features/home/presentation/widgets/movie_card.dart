@@ -34,28 +34,13 @@ class MovieCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: Stack(
           children: [
-            _buildPoster(),
+            _MoviePoster(movie: movie),
             _buildGradientOverlay(),
             _buildMovieInfo(context),
             _buildFavoriteButton(),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildPoster() {
-    return SizedBox(
-      width: double.infinity,
-      height: 240,
-      child: movie.posterUrl.isNotEmpty
-          ? CachedNetworkImage(
-              imageUrl: movie.posterUrl,
-              fit: BoxFit.cover,
-              placeholder: (_, __) => const _PosterSkeleton(),
-              errorWidget: (_, __, ___) => const _PosterFallback(),
-            )
-          : const _PosterFallback(),
     );
   }
 
@@ -213,6 +198,72 @@ class _AnimatedFavoriteButtonState extends State<_AnimatedFavoriteButton>
   }
 }
 
+/// Tries [movie.posterUrl] first, then cycles through [movie.images] on error,
+/// and finally shows a static fallback if all URLs are exhausted.
+class _MoviePoster extends StatefulWidget {
+  final MovieEntity movie;
+  const _MoviePoster({required this.movie});
+
+  @override
+  State<_MoviePoster> createState() => _MoviePosterState();
+}
+
+class _MoviePosterState extends State<_MoviePoster> {
+  late int _urlIndex; // -1 = posterUrl, 0+ = images[index]
+  late List<String> _candidates;
+
+  @override
+  void initState() {
+    super.initState();
+    _buildCandidates();
+    _urlIndex = 0;
+  }
+
+  void _buildCandidates() {
+    final candidates = <String>[];
+    if (widget.movie.posterUrl.isNotEmpty) {
+      candidates.add(widget.movie.posterUrl);
+    }
+    for (final img in widget.movie.images) {
+      if (img.isNotEmpty && !candidates.contains(img)) {
+        candidates.add(img);
+      }
+    }
+    _candidates = candidates;
+  }
+
+  void _onError() {
+    if (_urlIndex < _candidates.length - 1) {
+      setState(() => _urlIndex++);
+    }
+    // else: exhausted all URLs — CachedNetworkImage error builder handles the fallback
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 240,
+      child: _candidates.isEmpty
+          ? const _StaticFallback()
+          : CachedNetworkImage(
+              key: ValueKey(_candidates[_urlIndex]),
+              imageUrl: _candidates[_urlIndex],
+              fit: BoxFit.cover,
+              placeholder: (_, __) => const _PosterSkeleton(),
+              errorWidget: (_, __, ___) {
+                if (_urlIndex < _candidates.length - 1) {
+                  // Trigger next candidate on next frame
+                  WidgetsBinding.instance.addPostFrameCallback((_) => _onError());
+                  return const _PosterSkeleton();
+                }
+                return const _StaticFallback();
+              },
+            ),
+    );
+  }
+}
+
 class _PosterSkeleton extends StatelessWidget {
   const _PosterSkeleton();
 
@@ -230,8 +281,8 @@ class _PosterSkeleton extends StatelessWidget {
   }
 }
 
-class _PosterFallback extends StatelessWidget {
-  const _PosterFallback();
+class _StaticFallback extends StatelessWidget {
+  const _StaticFallback();
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +290,7 @@ class _PosterFallback extends StatelessWidget {
       color: AppColors.surfaceElevated,
       child: Center(
         child: SvgPicture.asset(
-          AppAssets.icons.home,
+          AppAssets.icons.heart,
           width: 48,
           height: 48,
           colorFilter: const ColorFilter.mode(

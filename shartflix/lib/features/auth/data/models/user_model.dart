@@ -9,11 +9,16 @@ class UserModel extends UserEntity {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final id = json['id'] as String? ?? json['_id']?.toString() ?? '';
+    final photoUrlRaw = json['photoUrl'];
+    final photoUrl = photoUrlRaw is String && photoUrlRaw.isNotEmpty
+        ? photoUrlRaw
+        : null;
     return UserModel(
-      id: json['id'] as String? ?? '',
+      id: id,
       name: json['name'] as String? ?? '',
       email: json['email'] as String? ?? '',
-      photoUrl: json['photoUrl'] as String?,
+      photoUrl: photoUrl,
     );
   }
 
