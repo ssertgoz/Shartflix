@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -72,8 +73,11 @@ class _RegisterViewState extends State<_RegisterView> {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
+          backgroundColor: AppColors.background,
+          elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: AppColors.textPrimary, size: 20),
             onPressed: () => context.go(AppRoutes.login),
           ),
         ),
@@ -83,9 +87,9 @@ class _RegisterViewState extends State<_RegisterView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
                 _buildHeader(context, l10n),
-                const SizedBox(height: 40),
+                const SizedBox(height: 36),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -95,19 +99,19 @@ class _RegisterViewState extends State<_RegisterView> {
                         label: l10n.name,
                         hint: l10n.nameHint,
                         keyboardType: TextInputType.name,
-                        prefixIcon: const Icon(Icons.person_outline, color: AppColors.textHint),
+                        prefixIconPath: AppAssets.icons.user,
                         validator: (v) {
                           if (v == null || v.isEmpty) return l10n.nameRequired;
                           return null;
                         },
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 14),
                       AuthTextField(
                         controller: _emailController,
                         label: l10n.email,
                         hint: l10n.emailHint,
                         keyboardType: TextInputType.emailAddress,
-                        prefixIcon: const Icon(Icons.email_outlined, color: AppColors.textHint),
+                        prefixIconPath: AppAssets.icons.mail,
                         validator: (v) {
                           if (v == null || v.isEmpty) return l10n.emailRequired;
                           if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
@@ -116,13 +120,13 @@ class _RegisterViewState extends State<_RegisterView> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 14),
                       AuthTextField(
                         controller: _passwordController,
                         label: l10n.password,
                         hint: l10n.passwordHint,
                         isPassword: true,
-                        prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textHint),
+                        prefixIconPath: AppAssets.icons.lock,
                         validator: (v) {
                           if (v == null || v.isEmpty) return l10n.passwordRequired;
                           if (v.length < 6) return l10n.passwordTooShort;
@@ -133,26 +137,31 @@ class _RegisterViewState extends State<_RegisterView> {
                       BlocBuilder<AuthBloc, AuthState>(
                         builder: (context, state) {
                           final isLoading = state is AuthLoading;
-                          return ElevatedButton(
-                            onPressed: isLoading ? null : () => _submit(context),
-                            child: isLoading
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : Text(l10n.signUpButton),
+                          return SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: ElevatedButton(
+                              onPressed: isLoading ? null : () => _submit(context),
+                              child: isLoading
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text(l10n.signUpButton),
+                            ),
                           );
                         },
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 32),
-                _buildLoginLink(context, l10n),
+                const SizedBox(height: 40),
+                _buildLoginLink(context),
+                const SizedBox(height: 24),
               ],
             ),
           ),
@@ -165,11 +174,29 @@ class _RegisterViewState extends State<_RegisterView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+          ),
+          child: const Text(
+            'Hesap Oluştur',
+            style: TextStyle(
+              color: AppColors.primary,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'InstrumentSans',
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
         Text(
           l10n.createAccount,
           style: Theme.of(context).textTheme.headlineLarge,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Text(
           l10n.joinShartflix,
           style: Theme.of(context).textTheme.bodyMedium,
@@ -178,21 +205,26 @@ class _RegisterViewState extends State<_RegisterView> {
     );
   }
 
-  Widget _buildLoginLink(BuildContext context, AppLocalizations l10n) {
+  Widget _buildLoginLink(BuildContext context) {
     return Center(
       child: GestureDetector(
         onTap: () => context.go(AppRoutes.login),
         child: RichText(
           text: const TextSpan(
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 14,
+              fontFamily: 'InstrumentSans',
+            ),
             children: [
-              TextSpan(text: 'Already have an account? '),
+              TextSpan(text: 'Zaten hesabınız var mı? '),
               TextSpan(
-                text: 'Sign in.',
+                text: 'Giriş yapın.',
                 style: TextStyle(
                   color: AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
                   decoration: TextDecoration.underline,
+                  decorationColor: AppColors.textPrimary,
                 ),
               ),
             ],

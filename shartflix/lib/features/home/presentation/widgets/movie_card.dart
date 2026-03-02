@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../core/constants/app_assets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/movie_entity.dart';
 
@@ -16,10 +18,17 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: AppColors.card,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -38,7 +47,7 @@ class MovieCard extends StatelessWidget {
   Widget _buildPoster() {
     return SizedBox(
       width: double.infinity,
-      height: 220,
+      height: 240,
       child: movie.posterUrl.isNotEmpty
           ? CachedNetworkImage(
               imageUrl: movie.posterUrl,
@@ -55,8 +64,8 @@ class MovieCard extends StatelessWidget {
       bottom: 0,
       left: 0,
       right: 0,
+      height: 140,
       child: Container(
-        height: 120,
         decoration: const BoxDecoration(gradient: AppColors.cardGradient),
       ),
     );
@@ -64,9 +73,9 @@ class MovieCard extends StatelessWidget {
 
   Widget _buildMovieInfo(BuildContext context) {
     return Positioned(
-      bottom: 12,
-      left: 12,
-      right: 52,
+      bottom: 14,
+      left: 14,
+      right: 54,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -77,9 +86,10 @@ class MovieCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 17,
               fontWeight: FontWeight.w700,
-              shadows: [Shadow(color: Colors.black54, blurRadius: 4)],
+              fontFamily: 'InstrumentSans',
+              shadows: [Shadow(color: Colors.black54, blurRadius: 6)],
             ),
           ),
           if (movie.description.isNotEmpty) ...[
@@ -91,6 +101,7 @@ class MovieCard extends StatelessWidget {
               style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 12,
+                fontFamily: 'InstrumentSans',
               ),
             ),
           ],
@@ -101,8 +112,8 @@ class MovieCard extends StatelessWidget {
 
   Widget _buildFavoriteButton() {
     return Positioned(
-      top: 8,
-      right: 8,
+      bottom: 12,
+      right: 12,
       child: _AnimatedFavoriteButton(
         isFavorite: movie.isFavorite,
         onTap: onFavoriteToggle,
@@ -135,11 +146,18 @@ class _AnimatedFavoriteButtonState extends State<_AnimatedFavoriteButton>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 180),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.3).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _scaleAnimation = TweenSequence([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.0, end: 1.35),
+        weight: 50,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.35, end: 1.0),
+        weight: 50,
+      ),
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -149,7 +167,7 @@ class _AnimatedFavoriteButtonState extends State<_AnimatedFavoriteButton>
   }
 
   void _handleTap() {
-    _controller.forward().then((_) => _controller.reverse());
+    _controller.forward(from: 0);
     widget.onTap();
   }
 
@@ -164,16 +182,30 @@ class _AnimatedFavoriteButtonState extends State<_AnimatedFavoriteButton>
           child: child,
         ),
         child: Container(
-          width: 36,
-          height: 36,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.6),
+            color: Colors.black.withValues(alpha: 0.65),
             shape: BoxShape.circle,
+            border: Border.all(
+              color: widget.isFavorite
+                  ? AppColors.primary.withValues(alpha: 0.5)
+                  : Colors.white.withValues(alpha: 0.2),
+              width: 1,
+            ),
           ),
-          child: Icon(
-            widget.isFavorite ? Icons.favorite : Icons.favorite_border,
-            color: widget.isFavorite ? AppColors.primary : Colors.white,
-            size: 20,
+          child: Center(
+            child: SvgPicture.asset(
+              widget.isFavorite
+                  ? AppAssets.icons.heartFill
+                  : AppAssets.icons.heart,
+              width: 20,
+              height: 20,
+              colorFilter: ColorFilter.mode(
+                widget.isFavorite ? AppColors.primary : Colors.white,
+                BlendMode.srcIn,
+              ),
+            ),
           ),
         ),
       ),
@@ -205,11 +237,15 @@ class _PosterFallback extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.surfaceElevated,
-      child: const Center(
-        child: Icon(
-          Icons.movie_outlined,
-          color: AppColors.textHint,
-          size: 48,
+      child: Center(
+        child: SvgPicture.asset(
+          AppAssets.icons.home,
+          width: 48,
+          height: 48,
+          colorFilter: const ColorFilter.mode(
+            AppColors.textHint,
+            BlendMode.srcIn,
+          ),
         ),
       ),
     );

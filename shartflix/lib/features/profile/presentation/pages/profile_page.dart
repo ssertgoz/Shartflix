@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -109,16 +111,53 @@ class _ProfileView extends StatelessWidget {
       floating: true,
       title: Text(l10n.myProfile, style: Theme.of(context).textTheme.titleLarge),
       actions: [
-        TextButton.icon(
-          onPressed: () => showLimitedOfferBottomSheet(context),
-          icon: const Icon(Icons.local_offer, color: AppColors.primary, size: 18),
-          label: Text(
-            'Sınır Teklif',
-            style: const TextStyle(color: AppColors.primary, fontSize: 13),
+        GestureDetector(
+          onTap: () => showLimitedOfferBottomSheet(context),
+          child: Container(
+            margin: const EdgeInsets.only(right: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                  color: AppColors.primary.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(
+                  AppAssets.icons.gem,
+                  width: 14,
+                  height: 14,
+                  colorFilter: const ColorFilter.mode(
+                    AppColors.primary,
+                    BlendMode.srcIn,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                const Text(
+                  'Sınır Teklif',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'InstrumentSans',
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.logout, color: AppColors.textSecondary),
+          icon: SvgPicture.asset(
+            AppAssets.icons.x,
+            width: 20,
+            height: 20,
+            colorFilter: const ColorFilter.mode(
+              AppColors.textSecondary,
+              BlendMode.srcIn,
+            ),
+          ),
           onPressed: () {
             showDialog(
               context: context,
@@ -180,13 +219,24 @@ class _ProfileView extends StatelessWidget {
                       ),
                     ),
                   Container(
-                    width: 24,
-                    height: 24,
-                    decoration: const BoxDecoration(
+                    width: 26,
+                    height: 26,
+                    decoration: BoxDecoration(
                       color: AppColors.primary,
                       shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.background, width: 2),
                     ),
-                    child: const Icon(Icons.camera_alt, size: 12, color: Colors.white),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppAssets.icons.plus,
+                        width: 12,
+                        height: 12,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -250,10 +300,20 @@ class _ProfileView extends StatelessWidget {
       width: size,
       height: size,
       decoration: const BoxDecoration(
-        color: AppColors.primary,
+        color: AppColors.surfaceElevated,
         shape: BoxShape.circle,
       ),
-      child: const Icon(Icons.person, color: Colors.white, size: 36),
+      child: Center(
+        child: SvgPicture.asset(
+          AppAssets.icons.profile,
+          width: size * 0.5,
+          height: size * 0.5,
+          colorFilter: const ColorFilter.mode(
+            AppColors.textHint,
+            BlendMode.srcIn,
+          ),
+        ),
+      ),
     );
   }
 
@@ -282,10 +342,14 @@ class _ProfileView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 40),
                   child: Column(
                     children: [
-                      const Icon(
-                        Icons.favorite_border,
-                        size: 48,
-                        color: AppColors.textHint,
+                      SvgPicture.asset(
+                        AppAssets.icons.heart,
+                        width: 48,
+                        height: 48,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.textHint,
+                          BlendMode.srcIn,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Text(
@@ -329,23 +393,32 @@ class _StatChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.15),
+        color: AppColors.primary.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.favorite, size: 12, color: AppColors.primary),
-          const SizedBox(width: 4),
+          SvgPicture.asset(
+            AppAssets.icons.heartFill,
+            width: 12,
+            height: 12,
+            colorFilter: const ColorFilter.mode(
+              AppColors.primary,
+              BlendMode.srcIn,
+            ),
+          ),
+          const SizedBox(width: 5),
           Text(
             '$label $sublabel',
             style: const TextStyle(
               color: AppColors.primary,
               fontSize: 12,
               fontWeight: FontWeight.w600,
+              fontFamily: 'InstrumentSans',
             ),
           ),
         ],

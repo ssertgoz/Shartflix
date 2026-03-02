@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
+import '../../../../core/constants/app_assets.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../bloc/home_bloc.dart';
@@ -67,7 +70,7 @@ class _HomeViewState extends State<_HomeView> {
         backgroundColor: AppColors.surfaceElevated,
         onRefresh: () async {
           context.read<HomeBloc>().add(const RefreshMovies());
-          await Future.delayed(const Duration(milliseconds: 500));
+          await Future.delayed(const Duration(milliseconds: 600));
         },
         child: CustomScrollView(
           controller: _scrollController,
@@ -86,6 +89,7 @@ class _HomeViewState extends State<_HomeView> {
       snap: true,
       backgroundColor: AppColors.background,
       elevation: 0,
+      scrolledUnderElevation: 0,
       title: Row(
         children: [
           Container(
@@ -93,20 +97,21 @@ class _HomeViewState extends State<_HomeView> {
             height: 32,
             decoration: BoxDecoration(
               color: AppColors.primary,
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(7),
             ),
             child: const Center(
               child: Text(
                 'N',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                   color: Colors.white,
+                  fontFamily: 'InstrumentSans',
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           Text(
             l10n.explore,
             style: Theme.of(context).textTheme.titleLarge,
@@ -115,14 +120,20 @@ class _HomeViewState extends State<_HomeView> {
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.search, color: AppColors.textPrimary),
+          icon: const Icon(Icons.search_rounded, color: AppColors.textPrimary, size: 22),
           onPressed: () {},
         ),
         IconButton(
-          icon: const Icon(Icons.notifications_none, color: AppColors.textPrimary),
+          icon: const Icon(Icons.notifications_none_rounded,
+              color: AppColors.textPrimary, size: 22),
           onPressed: () {},
         ),
+        const SizedBox(width: 4),
       ],
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Container(height: 1, color: AppColors.divider),
+      ),
     );
   }
 
@@ -133,7 +144,10 @@ class _HomeViewState extends State<_HomeView> {
             state.status == HomeStatus.loading) {
           return const SliverFillRemaining(
             child: Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
+              child: CircularProgressIndicator(
+                color: AppColors.primary,
+                strokeWidth: 2,
+              ),
             ),
           );
         }
@@ -142,7 +156,8 @@ class _HomeViewState extends State<_HomeView> {
           return SliverFillRemaining(
             child: _ErrorView(
               message: state.errorMessage ?? l10n.unknownError,
-              onRetry: () => context.read<HomeBloc>().add(const FetchMovies(page: 1)),
+              onRetry: () =>
+                  context.read<HomeBloc>().add(const FetchMovies(page: 1)),
             ),
           );
         }
@@ -150,8 +165,12 @@ class _HomeViewState extends State<_HomeView> {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              if (index < state.movies.length) {
-                final movie = state.movies[index];
+              if (index == 0) {
+                return _buildSectionHeader(context, state, l10n);
+              }
+              final movieIndex = index - 1;
+              if (movieIndex < state.movies.length) {
+                final movie = state.movies[movieIndex];
                 return MovieCard(
                   movie: movie,
                   onFavoriteToggle: () => context
@@ -159,32 +178,83 @@ class _HomeViewState extends State<_HomeView> {
                       .add(ToggleFavoriteMovie(movie.id)),
                 );
               }
-              return _buildLoadingTile(state, context, l10n);
+              return _buildBottomLoader(state);
             },
-            childCount: state.movies.length + (state.hasReachedMax ? 0 : 1),
+            childCount: state.movies.length + 1 + (state.hasReachedMax ? 0 : 1),
           ),
         );
       },
     );
   }
 
-  Widget _buildLoadingTile(
-    HomeState state,
+  Widget _buildSectionHeader(
     BuildContext context,
+    HomeState state,
     AppLocalizations l10n,
   ) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Filmler',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          if (state.movies.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(
+                    AppAssets.icons.heartFill,
+                    width: 12,
+                    height: 12,
+                    colorFilter: const ColorFilter.mode(
+                      AppColors.primary,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${state.favoriteIds.length} favori',
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'InstrumentSans',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomLoader(HomeState state) {
     if (state.status == HomeStatus.loadingMore) {
-      return const Padding(
-        padding: EdgeInsets.all(24),
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
         child: Center(
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: AppColors.primary,
+          child: SizedBox(
+            width: 56,
+            height: 56,
+            child: Lottie.asset(
+              AppAssets.animations.loading,
+              fit: BoxFit.contain,
+            ),
           ),
         ),
       );
     }
-    return const SizedBox.shrink();
+    return const SizedBox(height: 24);
   }
 }
 
@@ -202,21 +272,37 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.wifi_off_rounded,
-              size: 64,
-              color: AppColors.textHint,
+            Container(
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                color: AppColors.surfaceElevated,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.wifi_off_rounded,
+                size: 36,
+                color: AppColors.textHint,
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
+            Text(
+              'Bağlantı hatası',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
             ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: onRetry,
-              child: Text(AppLocalizations.of(context).tryAgain),
+            const SizedBox(height: 28),
+            SizedBox(
+              width: 160,
+              child: ElevatedButton(
+                onPressed: onRetry,
+                child: Text(AppLocalizations.of(context).tryAgain),
+              ),
             ),
           ],
         ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -74,19 +76,11 @@ class _LoginViewState extends State<_LoginView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 60),
+                const SizedBox(height: 56),
                 _buildLogo(),
-                const SizedBox(height: 48),
-                Text(
-                  l10n.welcomeBack,
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Sign in to continue watching',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
                 const SizedBox(height: 40),
+                _buildHeader(context, l10n),
+                const SizedBox(height: 36),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -96,7 +90,7 @@ class _LoginViewState extends State<_LoginView> {
                         label: l10n.email,
                         hint: l10n.emailHint,
                         keyboardType: TextInputType.emailAddress,
-                        prefixIcon: const Icon(Icons.email_outlined, color: AppColors.textHint),
+                        prefixIconPath: AppAssets.icons.mail,
                         validator: (v) {
                           if (v == null || v.isEmpty) return l10n.emailRequired;
                           if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
@@ -105,58 +99,72 @@ class _LoginViewState extends State<_LoginView> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 14),
                       AuthTextField(
                         controller: _passwordController,
                         label: l10n.password,
                         hint: l10n.passwordHint,
                         isPassword: true,
-                        prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textHint),
+                        prefixIconPath: AppAssets.icons.lock,
                         validator: (v) {
                           if (v == null || v.isEmpty) return l10n.passwordRequired;
                           if (v.length < 6) return l10n.passwordTooShort;
                           return null;
                         },
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {},
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
                           child: Text(
                             l10n.forgotPassword,
-                            style: const TextStyle(color: AppColors.textSecondary),
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 13,
+                              fontFamily: 'InstrumentSans',
+                            ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 28),
                       BlocBuilder<AuthBloc, AuthState>(
                         builder: (context, state) {
                           final isLoading = state is AuthLoading;
-                          return ElevatedButton(
-                            onPressed: isLoading ? null : () => _submit(context),
-                            child: isLoading
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : Text(l10n.signInButton),
+                          return SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: ElevatedButton(
+                              onPressed: isLoading ? null : () => _submit(context),
+                              child: isLoading
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text(l10n.signInButton),
+                            ),
                           );
                         },
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 36),
                 _buildDivider(l10n),
-                const SizedBox(height: 32),
+                const SizedBox(height: 28),
                 _buildSocialButtons(),
-                const SizedBox(height: 40),
-                _buildRegisterLink(context, l10n),
+                const SizedBox(height: 48),
+                _buildRegisterLink(context),
+                const SizedBox(height: 24),
               ],
             ),
           ),
@@ -166,38 +174,78 @@ class _LoginViewState extends State<_LoginView> {
   }
 
   Widget _buildLogo() {
-    return Container(
-      width: 52,
-      height: 52,
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Center(
-        child: Text(
-          'N',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
+    return Row(
+      children: [
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const Center(
+            child: Text(
+              'N',
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                fontFamily: 'InstrumentSans',
+              ),
+            ),
           ),
         ),
-      ),
+        const SizedBox(width: 10),
+        const Text(
+          'Shartflix',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+            fontFamily: 'InstrumentSans',
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.welcomeBack,
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+        const SizedBox(height: 6),
+        Text(
+          'Shartflix\'e giriş yapın',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ],
     );
   }
 
   Widget _buildDivider(AppLocalizations l10n) {
     return Row(
       children: [
-        const Expanded(child: Divider(color: AppColors.divider)),
+        const Expanded(
+          child: Divider(color: AppColors.divider, thickness: 1),
+        ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             l10n.orContinueWith,
-            style: const TextStyle(color: AppColors.textHint, fontSize: 12),
+            style: const TextStyle(
+              color: AppColors.textHint,
+              fontSize: 12,
+              fontFamily: 'InstrumentSans',
+            ),
           ),
         ),
-        const Expanded(child: Divider(color: AppColors.divider)),
+        const Expanded(
+          child: Divider(color: AppColors.divider, thickness: 1),
+        ),
       ],
     );
   }
@@ -207,23 +255,23 @@ class _LoginViewState extends State<_LoginView> {
       children: [
         Expanded(
           child: _SocialButton(
-            icon: Icons.g_mobiledata_rounded,
+            svgPath: AppAssets.icons.google,
             label: 'Google',
             onTap: () {},
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(
           child: _SocialButton(
-            icon: Icons.apple,
+            svgPath: AppAssets.icons.apple,
             label: 'Apple',
             onTap: () {},
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(
           child: _SocialButton(
-            icon: Icons.facebook,
+            svgPath: AppAssets.icons.facebook,
             label: 'Facebook',
             onTap: () {},
           ),
@@ -232,21 +280,26 @@ class _LoginViewState extends State<_LoginView> {
     );
   }
 
-  Widget _buildRegisterLink(BuildContext context, AppLocalizations l10n) {
+  Widget _buildRegisterLink(BuildContext context) {
     return Center(
       child: GestureDetector(
         onTap: () => context.go(AppRoutes.register),
         child: RichText(
-          text: TextSpan(
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+          text: const TextSpan(
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 14,
+              fontFamily: 'InstrumentSans',
+            ),
             children: [
-              const TextSpan(text: 'New to Shartflix? '),
+              TextSpan(text: 'Shartflix\'e yeni misiniz? '),
               TextSpan(
-                text: 'Sign up now.',
-                style: const TextStyle(
+                text: 'Kaydolun.',
+                style: TextStyle(
                   color: AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
                   decoration: TextDecoration.underline,
+                  decorationColor: AppColors.textPrimary,
                 ),
               ),
             ],
@@ -258,12 +311,12 @@ class _LoginViewState extends State<_LoginView> {
 }
 
 class _SocialButton extends StatelessWidget {
-  final IconData icon;
+  final String svgPath;
   final String label;
   final VoidCallback onTap;
 
   const _SocialButton({
-    required this.icon,
+    required this.svgPath,
     required this.label,
     required this.onTap,
   });
@@ -274,21 +327,26 @@ class _SocialButton extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.divider),
+          color: AppColors.inputBackground,
+          border: Border.all(color: AppColors.inputBorder),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
           children: [
-            Icon(icon, color: AppColors.textSecondary, size: 20),
-            const SizedBox(width: 6),
+            SvgPicture.asset(
+              svgPath,
+              width: 22,
+              height: 22,
+            ),
+            const SizedBox(height: 4),
             Text(
               label,
               style: const TextStyle(
                 color: AppColors.textSecondary,
-                fontSize: 12,
+                fontSize: 11,
+                fontFamily: 'InstrumentSans',
               ),
             ),
           ],
