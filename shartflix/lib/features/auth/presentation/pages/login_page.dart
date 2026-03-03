@@ -39,12 +39,26 @@ class _LoginViewState extends State<_LoginView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  String? _loginErrorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(_clearLoginError);
+  }
 
   @override
   void dispose() {
+    _passwordController.removeListener(_clearLoginError);
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _clearLoginError() {
+    if (_loginErrorMessage != null) {
+      setState(() => _loginErrorMessage = null);
+    }
   }
 
   void _submit(BuildContext context) {
@@ -58,6 +72,14 @@ class _LoginViewState extends State<_LoginView> {
     }
   }
 
+  String? _loginErrorForDisplay(AuthFailure state, AppLocalizations l10n) {
+    final msg = state.message.toUpperCase();
+    if (msg.contains('INVALID_CREDENTIALS') || msg.contains('INVALID CREDENTIALS')) {
+      return l10n.invalidCredentials;
+    }
+    return state.message;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -66,12 +88,11 @@ class _LoginViewState extends State<_LoginView> {
         if (state is AuthSuccess) {
           context.go(AppRoutes.home);
         } else if (state is AuthFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-            ),
-          );
+          setState(() {
+            _loginErrorMessage = _loginErrorForDisplay(state, l10n);
+          });
+        } else if (state is AuthLoading) {
+          setState(() => _loginErrorMessage = null);
         }
       },
       child: Scaffold(
@@ -125,7 +146,9 @@ class _LoginViewState extends State<_LoginView> {
                           hint: l10n.passwordHint,
                           isPassword: true,
                           prefixIconPath: AppAssets.icons.lock,
+                          errorText: _loginErrorMessage,
                           validator: (v) {
+                            if (_loginErrorMessage != null) return null;
                             if (v == null || v.isEmpty) return l10n.passwordRequired;
                             if (v.length < 6) return l10n.passwordTooShort;
                             return null;

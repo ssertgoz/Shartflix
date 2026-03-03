@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -59,15 +58,10 @@ class _RefreshProfileWhenVisibleState extends State<_RefreshProfileWhenVisible> 
 class _ProfileView extends StatelessWidget {
   const _ProfileView();
 
-  Future<void> _pickAndUploadPhoto(BuildContext context) async {
-    final picker = ImagePicker();
-    final image = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-      maxWidth: 800,
-    );
-    if (image != null && context.mounted) {
-      context.read<ProfileBloc>().add(UploadProfilePhoto(image.path));
+  Future<void> _navigateToPhotoUpload(BuildContext context) async {
+    await context.push(AppRoutes.photoUpload);
+    if (context.mounted) {
+      context.read<ProfileBloc>().add(const FetchProfile());
     }
   }
 
@@ -127,7 +121,7 @@ class _ProfileView extends StatelessWidget {
                     ProfileHeader(
                       user: state.user,
                       isUploadingPhoto: state.isUploadingPhoto,
-                      onPickPhoto: () => _pickAndUploadPhoto(context),
+                      onPickPhoto: () => _navigateToPhotoUpload(context),
                       l10n: l10n,
                     ),
                     FavoritesSection(

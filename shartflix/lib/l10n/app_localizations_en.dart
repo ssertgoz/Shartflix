@@ -72,6 +72,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordTooShort => 'Password must be at least 6 characters';
 
   @override
+  String get invalidCredentials => 'Password incorrect, please try again';
+
+  @override
   String get home => 'Home';
 
   @override
@@ -188,4 +191,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get termsRequired => 'You must accept the user agreement.';
+
+  @override
+  String get profileDetail => 'Profile Details';
+
+  @override
+  String get photoUploadSubtitle =>
+      'You can upload an image for your profile photo';
+
+  @override
+  String get continueButton => 'Continue';
+
+  @override
+  String get skipButton => 'Skip';
 }

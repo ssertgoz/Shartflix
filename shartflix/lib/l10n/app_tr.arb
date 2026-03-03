@@ -21,6 +21,7 @@
   "nameRequired": "Ad gereklidir",
   "emailInvalid": "Geçerli bir e-posta adresi girin",
   "passwordTooShort": "Şifre en az 6 karakter olmalıdır",
+  "invalidCredentials": "Şifre Yanlış, Lütfen tekrar dene",
   "home": "Ana Sayfa",
   "profile": "Profil",
   "explore": "Keşfet",
@@ -59,5 +60,9 @@
   "termsPrefix": "Kullanıcı sözleşmesini ",
   "termsLink": "Okudum ve Kabul ediyorum.",
   "termsSuffix": "Bu sözleşmeyi okuyarak devam ediniz lütfen.",
-  "termsRequired": "Kullanıcı sözleşmesini kabul etmelisiniz."
+  "termsRequired": "Kullanıcı sözleşmesini kabul etmelisiniz.",
+  "profileDetail": "Profil Detayı",
+  "photoUploadSubtitle": "Profil fotoğrafın için görsel yükleyebilirsin",
+  "continueButton": "Devam Et",
+  "skipButton": "Atla"
 }

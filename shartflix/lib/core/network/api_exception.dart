@@ -24,7 +24,12 @@ Failure handleDioException(DioException e) {
 String? _extractMessage(dynamic data) {
   if (data == null) return null;
   if (data is Map<String, dynamic>) {
-    return data['message'] as String? ?? data['error'] as String?;
+    final direct = data['message'] as String? ?? data['error'] as String?;
+    if (direct != null && direct.isNotEmpty) return direct;
+    final nested = data['response'];
+    if (nested is Map<String, dynamic>) {
+      return nested['message'] as String?;
+    }
   }
   return data.toString();
 }

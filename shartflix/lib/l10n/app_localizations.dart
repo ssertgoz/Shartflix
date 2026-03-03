@@ -224,6 +224,12 @@ abstract class AppLocalizations {
   /// **'Password must be at least 6 characters'**
   String get passwordTooShort;
 
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Password incorrect, please try again'**
+  String get invalidCredentials;
+
   /// No description provided for @home.
   ///
   /// In en, this message translates to:
@@ -457,6 +463,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You must accept the user agreement.'**
   String get termsRequired;
+
+  /// No description provided for @profileDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Details'**
+  String get profileDetail;
+
+  /// No description provided for @photoUploadSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You can upload an image for your profile photo'**
+  String get photoUploadSubtitle;
+
+  /// No description provided for @continueButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueButton;
+
+  /// No description provided for @skipButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skipButton;
 }
 
 class _AppLocalizationsDelegate

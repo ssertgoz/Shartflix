@@ -8,6 +8,7 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/profile/presentation/pages/photo_upload_page.dart';
 import '../constants/app_assets.dart';
 import '../di/injection.dart';
 import 'secure_storage_service.dart';
@@ -34,6 +35,10 @@ class AppRouter {
           GoRoute(
             path: AppRoutes.register,
             builder: (_, __) => const RegisterPage(),
+          ),
+          GoRoute(
+            path: AppRoutes.photoUpload,
+            builder: (_, __) => const PhotoUploadPage(),
           ),
           StatefulShellRoute.indexedStack(
             builder: (context, state, navigationShell) =>

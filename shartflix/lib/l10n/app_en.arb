@@ -21,6 +21,7 @@
   "nameRequired": "Name is required",
   "emailInvalid": "Enter a valid email address",
   "passwordTooShort": "Password must be at least 6 characters",
+  "invalidCredentials": "Password incorrect, please try again",
   "home": "Home",
   "profile": "Profile",
   "explore": "Explore",
@@ -59,5 +60,9 @@
   "termsPrefix": "I have read the user agreement ",
   "termsLink": "and I accept.",
   "termsSuffix": "Please continue by reading this agreement.",
-  "termsRequired": "You must accept the user agreement."
+  "termsRequired": "You must accept the user agreement.",
+  "profileDetail": "Profile Details",
+  "photoUploadSubtitle": "You can upload an image for your profile photo",
+  "continueButton": "Continue",
+  "skipButton": "Skip"
 }

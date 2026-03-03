@@ -12,6 +12,9 @@ class AuthTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final String? prefixIconPath;
 
+  /// When set, shown below the field and field uses error styling (e.g. login failure).
+  final String? errorText;
+
   const AuthTextField({
     super.key,
     required this.controller,
@@ -21,6 +24,7 @@ class AuthTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.prefixIconPath,
+    this.errorText,
   });
 
   @override
@@ -32,38 +36,54 @@ class _AuthTextFieldState extends State<AuthTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final hasError = widget.errorText != null && widget.errorText!.isNotEmpty;
     return TextFormField(
       controller: widget.controller,
       obscureText: widget.isPassword && _obscureText,
       keyboardType: widget.keyboardType,
       validator: widget.validator,
-      style: const TextStyle(
-        color: AppColors.textPrimary,
+      style: TextStyle(
+        color: hasError ? AppColors.error : AppColors.textPrimary,
         fontSize: 15,
         fontFamily: 'InstrumentSans',
       ),
       decoration: InputDecoration(
         hintText: widget.hint,
         fillColor: AppColors.white5,
+        errorText: widget.errorText,
+        errorStyle: const TextStyle(
+          color: AppColors.error,
+          fontSize: 13,
+          fontFamily: 'InstrumentSans',
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: AppColors.inputBorder, width: 1),
+          borderSide: BorderSide(
+            color: hasError ? AppColors.error : AppColors.inputBorder,
+            width: 1,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: AppColors.inputBorder, width: 1),
+          borderSide: BorderSide(
+            color: hasError ? AppColors.error : AppColors.inputBorder,
+            width: 1,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: AppColors.inputBorder, width: 1),
+          borderSide: BorderSide(
+            color: hasError ? AppColors.error : AppColors.inputBorder,
+            width: 1,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: AppColors.inputBorder, width: 1),
+          borderSide: const BorderSide(color: AppColors.inputBorder, width: 1),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: AppColors.inputBorder, width: 1),
+          borderSide: const BorderSide(color: AppColors.inputBorder, width: 1),
         ),
         prefixIcon: widget.prefixIconPath != null
             ? Padding(

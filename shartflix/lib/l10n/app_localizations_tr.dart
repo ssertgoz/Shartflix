@@ -72,6 +72,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get passwordTooShort => 'Şifre en az 6 karakter olmalıdır';
 
   @override
+  String get invalidCredentials => 'Şifre Yanlış, Lütfen tekrar dene';
+
+  @override
   String get home => 'Ana Sayfa';
 
   @override
@@ -187,4 +190,17 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get termsRequired => 'Kullanıcı sözleşmesini kabul etmelisiniz.';
+
+  @override
+  String get profileDetail => 'Profil Detayı';
+
+  @override
+  String get photoUploadSubtitle =>
+      'Profil fotoğrafın için görsel yükleyebilirsin';
+
+  @override
+  String get continueButton => 'Devam Et';
+
+  @override
+  String get skipButton => 'Atla';
 }
