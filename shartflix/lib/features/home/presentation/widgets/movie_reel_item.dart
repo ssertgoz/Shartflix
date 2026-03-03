@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -32,7 +33,9 @@ class _MovieReelItemState extends State<MovieReelItem> {
     return Stack(
       fit: StackFit.expand,
       children: [
-        _ReelPoster(movie: movie),
+        Positioned.fill(
+          child: _ReelPoster(movie: movie),
+        ),
         const Positioned.fill(
           child: DecoratedBox(
             decoration: BoxDecoration(
@@ -167,21 +170,31 @@ class _ReelPoster extends StatefulWidget {
 class _ReelPosterState extends State<_ReelPoster> {
   late List<String> _candidates;
   late int _urlIndex;
+  Timer? _cycleTimer;
 
   @override
   void initState() {
     super.initState();
     _candidates = _buildCandidates();
     _urlIndex = 0;
+    _startCycleTimer();
   }
 
   @override
   void didUpdateWidget(_ReelPoster oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.movie.id != widget.movie.id) {
+      _cycleTimer?.cancel();
       _candidates = _buildCandidates();
       _urlIndex = 0;
+      _startCycleTimer();
     }
+  }
+
+  @override
+  void dispose() {
+    _cycleTimer?.cancel();
+    super.dispose();
   }
 
   List<String> _buildCandidates() {
@@ -191,6 +204,17 @@ class _ReelPosterState extends State<_ReelPoster> {
       if (url.isNotEmpty && !list.contains(url)) list.add(url);
     }
     return list;
+  }
+
+  void _startCycleTimer() {
+    if (_candidates.length <= 1) return;
+    _cycleTimer?.cancel();
+    _cycleTimer = Timer.periodic(const Duration(seconds: 2), (_) {
+      if (!mounted) return;
+      setState(() {
+        _urlIndex = (_urlIndex + 1) % _candidates.length;
+      });
+    });
   }
 
   void _tryNextUrl() {
@@ -217,31 +241,44 @@ class _ReelPosterState extends State<_ReelPoster> {
         ),
       );
     }
-    return CachedNetworkImage(
-      key: ValueKey('${widget.movie.id}_$_urlIndex'),
-      imageUrl: _candidates[_urlIndex],
-      fit: BoxFit.cover,
-      placeholder: (_, __) => Container(
-        color: AppColors.shimmer,
-        child: const Center(
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: AppColors.primary,
-          ),
-        ),
-      ),
-      errorWidget: (_, __, ___) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => _tryNextUrl());
-        return Container(
-          color: AppColors.shimmer,
-          child: const Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: AppColors.primary,
+    return SizedBox.expand(
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        switchInCurve: Curves.easeIn,
+        switchOutCurve: Curves.easeOut,
+        child: CachedNetworkImage(
+          key: ValueKey('${widget.movie.id}_$_urlIndex'),
+          imageUrl: _candidates[_urlIndex],
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+          placeholder: (_, __) => Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: AppColors.shimmer,
+            child: const Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: AppColors.primary,
+              ),
             ),
           ),
-        );
-      },
+          errorWidget: (_, __, ___) {
+            WidgetsBinding.instance.addPostFrameCallback((_) => _tryNextUrl());
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: AppColors.shimmer,
+              child: const Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: AppColors.primary,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

@@ -106,13 +106,15 @@ class _HomeViewState extends State<_HomeView> {
                 );
               }
               final movie = state.movies[index];
-              return MovieReelItem(
-                key: ValueKey(movie.id),
-                movie: movie,
-                onFavoriteToggle: () {
-                  context.read<HomeBloc>().add(ToggleFavoriteMovie(movie.id));
-                  context.read<ProfileBloc>().add(const FetchProfile());
-                },
+              return SizedBox.expand(
+                child: MovieReelItem(
+                  key: ValueKey(movie.id),
+                  movie: movie,
+                  onFavoriteToggle: () {
+                    context.read<HomeBloc>().add(ToggleFavoriteMovie(movie.id));
+                    context.read<ProfileBloc>().add(const FetchProfile());
+                  },
+                ),
               );
             },
           );
