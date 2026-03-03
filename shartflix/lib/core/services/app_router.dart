@@ -172,10 +172,10 @@ class _NavButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            gradient: isSelected ? AppColors.gradientPrimary : null,
+            gradient: isSelected ? AppColors.navButtonActiveGradient : null,
             color: isSelected ? null : AppColors.surface,
             borderRadius: BorderRadius.circular(999),
-            border: isSelected ? null : Border.all(color: AppColors.divider, width: 0.5),
+            border: Border.all(color: AppColors.white20, width: 1),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -185,7 +185,7 @@ class _NavButton extends StatelessWidget {
                 width: 22,
                 height: 22,
                 colorFilter: ColorFilter.mode(
-                  isSelected ? AppColors.white : AppColors.textHint,
+                  AppColors.white,
                   BlendMode.srcIn,
                 ),
               ),
@@ -195,8 +195,8 @@ class _NavButton extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: 'InstrumentSans',
                   fontSize: 14,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? AppColors.white : AppColors.textSecondary,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.white,
                 ),
               ),
             ],

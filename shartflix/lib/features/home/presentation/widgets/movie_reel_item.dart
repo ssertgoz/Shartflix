@@ -58,67 +58,78 @@ class _MovieReelItemState extends State<MovieReelItem> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image.asset(
-                      AppAssets.images.launcherIcon,
-                      width: 32,
-                      height: 32,
-                      fit: BoxFit.cover,
+                  Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.asset(
+                        AppAssets.images.launcherIcon,
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Text(
-                      movie.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'InstrumentSans',
-                        shadows: [
-                          Shadow(color: Colors.black54, blurRadius: 8),
-                        ],
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          movie.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'InstrumentSans',
+                            shadows: [
+                              Shadow(color: Colors.black54, blurRadius: 8),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                      if (movie.description.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          movie.description,
+                          maxLines: _descriptionExpanded ? null : 2,
+                          overflow: _descriptionExpanded ? null : TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 14,
+                            height: 1.35,
+                            fontFamily: 'InstrumentSans',
+                            shadows: [
+                              Shadow(color: Colors.black45, blurRadius: 4),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() => _descriptionExpanded = !_descriptionExpanded);
+                          },
+                          child: Text(
+                            _descriptionExpanded ? 'Daha az' : 'Devamı Oku',
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'InstrumentSans',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  )),
                 ],
               ),
-              if (movie.description.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Text(
-                  movie.description,
-                  maxLines: _descriptionExpanded ? null : 2,
-                  overflow: _descriptionExpanded ? null : TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                    height: 1.35,
-                    fontFamily: 'InstrumentSans',
-                    shadows: [
-                      Shadow(color: Colors.black45, blurRadius: 4),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                GestureDetector(
-                  onTap: () {
-                    setState(() => _descriptionExpanded = !_descriptionExpanded);
-                  },
-                  child: Text(
-                    _descriptionExpanded ? 'Daha az' : 'Devamı Oku',
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'InstrumentSans',
-                    ),
-                  ),
-                ),
-              ],
             ],
           ),
         ),

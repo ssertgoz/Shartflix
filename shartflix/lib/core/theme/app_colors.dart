@@ -36,8 +36,10 @@ class AppColors {
   static const Color surfaceElevated = Color(0xFF1C1C1C);
   static const Color card = Color(0xFF181818);
   static const Color navBackground = Color(0xFF111111);
+
   /// Dark reddish-brown for profile header
   static const Color profileHeaderBg = Color(0xFF1E1012);
+
   /// Slightly darker for header button (Fotoğraf Ekle)
   static const Color profileHeaderButtonBg = Color(0xFF170B0D);
   static const Color inputBackground = Color(0xFF1C1C1E);
@@ -60,11 +62,19 @@ class AppColors {
     colors: [Color(0xFF43FF00), Color(0xFF940309)],
   );
 
-  /// Primary / Active Nav: primary dark → primary
+  /// Primary / Active Nav: primary dark → primary (linear)
   static const LinearGradient gradientPrimary = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
     colors: [Color(0xFF7C060B), Color(0xFFE50914)],
+  );
+
+  /// Nav bar active button: radial 58.74% 83.33% at 50% 16.67%, #E50914 → #7F050B
+  static const RadialGradient navButtonActiveGradient = RadialGradient(
+    center: Alignment(0, -2),
+    radius: 2,
+    colors: [Color(0xFFE50914), Color(0xFF7F050B)],
+    stops: [0.0, 1.0],
   );
 
   /// Card overlay (transparent → black)
