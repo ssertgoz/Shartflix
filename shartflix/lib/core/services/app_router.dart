@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/profile/presentation/bloc/profile_bloc.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
@@ -34,9 +36,13 @@ class AppRouter {
             builder: (_, __) => const RegisterPage(),
           ),
           StatefulShellRoute.indexedStack(
-            builder: (context, state, navigationShell) => _MainShell(
-              navigationShell: navigationShell,
-              location: state.uri.toString(),
+            builder: (context, state, navigationShell) =>
+                BlocProvider<ProfileBloc>(
+              create: (_) => sl<ProfileBloc>(),
+              child: _MainShell(
+                navigationShell: navigationShell,
+                location: state.uri.toString(),
+              ),
             ),
             branches: [
               StatefulShellBranch(

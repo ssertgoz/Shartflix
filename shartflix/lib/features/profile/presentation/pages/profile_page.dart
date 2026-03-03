@@ -20,14 +20,42 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => sl<ProfileBloc>()..add(const FetchProfile()),
-        ),
         BlocProvider(create: (_) => sl<AuthBloc>()),
       ],
-      child: const _ProfileView(),
+      child: const _RefreshProfileWhenVisible(child: _ProfileView()),
     );
   }
+}
+
+/// Dispatches [FetchProfile] when the profile tab becomes visible so that
+/// "My Likes" stays in sync after toggling favorites on the home tab.
+class _RefreshProfileWhenVisible extends StatefulWidget {
+  final Widget child;
+
+  const _RefreshProfileWhenVisible({required this.child});
+
+  @override
+  State<_RefreshProfileWhenVisible> createState() =>
+      _RefreshProfileWhenVisibleState();
+}
+
+class _RefreshProfileWhenVisibleState extends State<_RefreshProfileWhenVisible> {
+  String? _lastLocation;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final location = GoRouterState.of(context).uri.toString();
+    final isProfileTab = location == AppRoutes.profile;
+    if (isProfileTab &&
+        (_lastLocation == null || _lastLocation != AppRoutes.profile)) {
+      context.read<ProfileBloc>().add(const FetchProfile());
+    }
+    _lastLocation = location;
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 class _ProfileView extends StatelessWidget {

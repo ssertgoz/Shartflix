@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../core/constants/app_assets.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../profile/presentation/bloc/profile_bloc.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/movie_reel_item.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
@@ -110,7 +109,10 @@ class _HomeViewState extends State<_HomeView> {
               return MovieReelItem(
                 key: ValueKey(movie.id),
                 movie: movie,
-                onFavoriteToggle: () => context.read<HomeBloc>().add(ToggleFavoriteMovie(movie.id)),
+                onFavoriteToggle: () {
+                  context.read<HomeBloc>().add(ToggleFavoriteMovie(movie.id));
+                  context.read<ProfileBloc>().add(const FetchProfile());
+                },
               );
             },
           );
