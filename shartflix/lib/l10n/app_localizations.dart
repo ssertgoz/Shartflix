@@ -161,19 +161,37 @@ abstract class AppLocalizations {
   /// No description provided for @emailHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter your email'**
+  /// **'Email'**
   String get emailHint;
 
   /// No description provided for @passwordHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter your password'**
+  /// **'Password'**
   String get passwordHint;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// No description provided for @confirmPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPasswordHint;
+
+  /// No description provided for @passwordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordMismatch;
 
   /// No description provided for @nameHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter your full name'**
+  /// **'Full Name'**
   String get nameHint;
 
   /// No description provided for @emailRequired.
@@ -415,6 +433,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Description'**
   String get description;
+
+  /// No description provided for @termsPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read the user agreement '**
+  String get termsPrefix;
+
+  /// No description provided for @termsLink.
+  ///
+  /// In en, this message translates to:
+  /// **'and I accept.'**
+  String get termsLink;
+
+  /// No description provided for @termsSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'Please continue by reading this agreement.'**
+  String get termsSuffix;
+
+  /// No description provided for @termsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the user agreement.'**
+  String get termsRequired;
 }
 
 class _AppLocalizationsDelegate

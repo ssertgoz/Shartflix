@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +9,10 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/auth_background.dart';
 import '../bloc/auth_bloc.dart';
 import '../widgets/auth_button.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/auth_link_prompt.dart';
+import '../widgets/auth_logo.dart';
+import '../widgets/auth_social_buttons.dart';
 import '../widgets/auth_text_field.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 
@@ -35,16 +40,28 @@ class _RegisterViewState extends State<_RegisterView> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  bool _agreedToTerms = false;
 
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   void _submit(BuildContext context) {
+    if (!_agreedToTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).termsRequired),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
     if (_formKey.currentState?.validate() ?? false) {
       context.read<AuthBloc>().add(
             RegisterSubmitted(
@@ -82,14 +99,17 @@ class _RegisterViewState extends State<_RegisterView> {
       child: Scaffold(
         body: AuthBackground(
           child: SafeArea(
-            top: false,
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 12),
-                  _buildHeader(context, l10n),
+                  const SizedBox(height: 24),
+                  const AuthLogo(),
+                  AuthHeader(
+                    title: l10n.createAccount,
+                    subtitle: 'Kullancı bilgilerini girerek kaydol',
+                  ),
                   const SizedBox(height: 36),
                   Form(
                     key: _formKey,
@@ -134,7 +154,24 @@ class _RegisterViewState extends State<_RegisterView> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 14),
+                        AuthTextField(
+                          controller: _confirmPasswordController,
+                          label: l10n.confirmPassword,
+                          hint: l10n.confirmPasswordHint,
+                          isPassword: true,
+                          prefixIconPath: AppAssets.icons.lock,
+                          validator: (v) {
+                            if (v == null || v.isEmpty) return l10n.passwordRequired;
+                            if (v != _passwordController.text) {
+                              return l10n.passwordMismatch;
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        _buildTermsCheckbox(context, l10n),
+                        const SizedBox(height: 28),
                         BlocBuilder<AuthBloc, AuthState>(
                           builder: (context, state) {
                             return AuthButton(
@@ -147,8 +184,14 @@ class _RegisterViewState extends State<_RegisterView> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 40),
-                  _buildLoginLink(context),
+                  const SizedBox(height: 24),
+                  const AuthSocialButtons(),
+                  const SizedBox(height: 24),
+                  AuthLinkPrompt(
+                    promptText: 'Hesabınız var mı? ',
+                    linkText: 'Giriş yapın.',
+                    onLinkTap: () => context.go(AppRoutes.login),
+                  ),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -159,67 +202,66 @@ class _RegisterViewState extends State<_RegisterView> {
     );
   }
 
-  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
-    return Column(
+  Widget _buildTermsCheckbox(BuildContext context, AppLocalizations l10n) {
+    const grayStyle = TextStyle(
+      color: AppColors.textSecondary,
+      fontSize: 12,
+      height: 1.35,
+      fontFamily: 'InstrumentSans',
+    );
+    const linkStyle = TextStyle(
+      color: AppColors.textPrimary,
+      fontSize: 13,
+      height: 1.35,
+      fontWeight: FontWeight.w600,
+      fontFamily: 'InstrumentSans',
+      decoration: TextDecoration.underline,
+      decorationColor: AppColors.textPrimary,
+    );
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
-          ),
-          child: const Text(
-            'Hesap Oluştur',
-            style: TextStyle(
-              color: AppColors.primary,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              fontFamily: 'InstrumentSans',
+        Transform.scale(
+          scale: 1.35,
+          child: Checkbox(
+            value: _agreedToTerms,
+            onChanged: (value) => setState(() => _agreedToTerms = value ?? false),
+            activeColor: AppColors.primary,
+            fillColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return AppColors.primary;
+              }
+              return AppColors.inputBackground;
+            }),
+            checkColor: AppColors.white,
+            side: BorderSide(color: AppColors.inputBorder),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
             ),
           ),
         ),
-        const SizedBox(height: 12),
-        Text(
-          l10n.createAccount,
-          style: Theme.of(context).textTheme.headlineLarge,
-        ),
-        const SizedBox(height: 6),
-        Text(
-          l10n.joinShartflix,
-          style: Theme.of(context).textTheme.bodyMedium,
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: RichText(
+              text: TextSpan(
+                style: grayStyle,
+                children: [
+                  TextSpan(text: l10n.termsPrefix),
+                  TextSpan(
+                    text: l10n.termsLink,
+                    style: linkStyle,
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => setState(() => _agreedToTerms = !_agreedToTerms),
+                  ),
+                  const TextSpan(text: '\n'),
+                  TextSpan(text: l10n.termsSuffix),
+                ],
+              ),
+            ),
+          ),
         ),
       ],
-    );
-  }
-
-  Widget _buildLoginLink(BuildContext context) {
-    return Center(
-      child: GestureDetector(
-        onTap: () => context.go(AppRoutes.login),
-        child: RichText(
-          text: const TextSpan(
-            style: TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 14,
-              fontFamily: 'InstrumentSans',
-            ),
-            children: [
-              TextSpan(text: 'Zaten hesabınız var mı? '),
-              TextSpan(
-                text: 'Giriş yapın.',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w600,
-                  decoration: TextDecoration.underline,
-                  decorationColor: AppColors.textPrimary,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

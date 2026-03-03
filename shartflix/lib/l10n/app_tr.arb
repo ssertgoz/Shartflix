@@ -10,9 +10,12 @@
   "signUpButton": "Hesap Oluştur",
   "noAccount": "Shartflix'e yeni misiniz? Şimdi kaydolun.",
   "hasAccount": "Zaten hesabınız var mı? Giriş yapın.",
-  "emailHint": "E-posta adresinizi girin",
-  "passwordHint": "Şifrenizi girin",
-  "nameHint": "Ad soyadınızı girin",
+  "emailHint": "E-Posta",
+  "passwordHint": "Şifre",
+  "confirmPassword": "Şifre Tekrar",
+  "confirmPasswordHint": "Şifre Tekrar",
+  "passwordMismatch": "Şifreler eşleşmiyor",
+  "nameHint": "Ad Soyad",
   "emailRequired": "E-posta gereklidir",
   "passwordRequired": "Şifre gereklidir",
   "nameRequired": "Ad gereklidir",
@@ -52,5 +55,9 @@
   "createAccount": "Hesap Oluştur",
   "joinShartflix": "Bugün Shartflix'e katılın",
   "movieDetails": "Film Detayları",
-  "description": "Açıklama"
+  "description": "Açıklama",
+  "termsPrefix": "Kullanıcı sözleşmesini ",
+  "termsLink": "Okudum ve Kabul ediyorum.",
+  "termsSuffix": "Bu sözleşmeyi okuyarak devam ediniz lütfen.",
+  "termsRequired": "Kullanıcı sözleşmesini kabul etmelisiniz."
 }

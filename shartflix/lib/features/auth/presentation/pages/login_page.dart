@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../core/constants/app_assets.dart';
@@ -10,6 +9,10 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/auth_background.dart';
 import '../bloc/auth_bloc.dart';
 import '../widgets/auth_button.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/auth_link_prompt.dart';
+import '../widgets/auth_logo.dart';
+import '../widgets/auth_social_buttons.dart';
 import '../widgets/auth_text_field.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 
@@ -90,8 +93,12 @@ class _LoginViewState extends State<_LoginView> {
                       ),
                     ),
                   ),
-                  _buildLogo(),
-                  _buildHeader(context, l10n),
+                  const AuthLogo(size: 90),
+                  const SizedBox(height: 32),
+                  AuthHeader(
+                    title: l10n.login,
+                    subtitle: 'Kullanıcı bilgilerinle giriş yap',
+                  ),
                   const SizedBox(height: 36),
                   Form(
                     key: _formKey,
@@ -159,130 +166,17 @@ class _LoginViewState extends State<_LoginView> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  _buildSocialButtons(),
+                  const AuthSocialButtons(),
                   const SizedBox(height: 24),
-                  _buildRegisterLink(context),
+                  AuthLinkPrompt(
+                    promptText: 'Bir hesabın yok mu? ',
+                    linkText: 'Kayıt Ol',
+                    onLinkTap: () => context.go(AppRoutes.register),
+                  ),
                 ],
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLogo() {
-    return Center(
-      child: Image.asset(
-        AppAssets.images.appIcon,
-        width: 90,
-        height: 90,
-        fit: BoxFit.cover,
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
-    return SizedBox(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              l10n.login,
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Kullınıcı bilgilerinle giriş yap',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
-        ));
-  }
-
-  Widget _buildSocialButtons() {
-    return Row(
-      spacing: 16,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _SocialButton(
-          svgPath: AppAssets.icons.google,
-          label: 'Google',
-          onTap: () {},
-        ),
-        _SocialButton(
-          svgPath: AppAssets.icons.apple,
-          label: 'Apple',
-          onTap: () {},
-        ),
-        _SocialButton(
-          svgPath: AppAssets.icons.facebook,
-          label: 'Facebook',
-          onTap: () {},
-        )
-      ],
-    );
-  }
-
-  Widget _buildRegisterLink(BuildContext context) {
-    return Center(
-      child: GestureDetector(
-        onTap: () => context.go(AppRoutes.register),
-        child: RichText(
-          text: const TextSpan(
-            style: TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 14,
-              fontFamily: 'InstrumentSans',
-            ),
-            children: [
-              TextSpan(text: 'Bir hesabın yok mu? '),
-              TextSpan(
-                text: ' Kayıt Ol',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w600,
-                  decorationColor: AppColors.textPrimary,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SocialButton extends StatelessWidget {
-  final String svgPath;
-  final String label;
-  final VoidCallback onTap;
-
-  const _SocialButton({
-    required this.svgPath,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        width: 60,
-        height: 60,
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: AppColors.inputBackground,
-          border: Border.all(color: AppColors.inputBorder),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: SvgPicture.asset(
-          svgPath,
-          width: 24,
-          height: 24,
         ),
       ),
     );

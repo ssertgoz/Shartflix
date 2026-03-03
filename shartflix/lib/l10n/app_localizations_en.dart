@@ -39,13 +39,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hasAccount => 'Already have an account? Sign in.';
 
   @override
-  String get emailHint => 'Enter your email';
+  String get emailHint => 'Email';
 
   @override
-  String get passwordHint => 'Enter your password';
+  String get passwordHint => 'Password';
 
   @override
-  String get nameHint => 'Enter your full name';
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get confirmPasswordHint => 'Confirm Password';
+
+  @override
+  String get passwordMismatch => 'Passwords do not match';
+
+  @override
+  String get nameHint => 'Full Name';
 
   @override
   String get emailRequired => 'Email is required';
@@ -167,4 +176,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get description => 'Description';
+
+  @override
+  String get termsPrefix => 'I have read the user agreement ';
+
+  @override
+  String get termsLink => 'and I accept.';
+
+  @override
+  String get termsSuffix => 'Please continue by reading this agreement.';
+
+  @override
+  String get termsRequired => 'You must accept the user agreement.';
 }

@@ -10,9 +10,12 @@
   "signUpButton": "Create Account",
   "noAccount": "New to Shartflix? Sign up now.",
   "hasAccount": "Already have an account? Sign in.",
-  "emailHint": "Enter your email",
-  "passwordHint": "Enter your password",
-  "nameHint": "Enter your full name",
+  "emailHint": "Email",
+  "passwordHint": "Password",
+  "confirmPassword": "Confirm Password",
+  "confirmPasswordHint": "Confirm Password",
+  "passwordMismatch": "Passwords do not match",
+  "nameHint": "Full Name",
   "emailRequired": "Email is required",
   "passwordRequired": "Password is required",
   "nameRequired": "Name is required",
@@ -52,5 +55,9 @@
   "createAccount": "Create Account",
   "joinShartflix": "Join Shartflix today",
   "movieDetails": "Movie Details",
-  "description": "Description"
+  "description": "Description",
+  "termsPrefix": "I have read the user agreement ",
+  "termsLink": "and I accept.",
+  "termsSuffix": "Please continue by reading this agreement.",
+  "termsRequired": "You must accept the user agreement."
 }

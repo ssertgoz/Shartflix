@@ -39,13 +39,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get hasAccount => 'Zaten hesabınız var mı? Giriş yapın.';
 
   @override
-  String get emailHint => 'E-posta adresinizi girin';
+  String get emailHint => 'E-Posta';
 
   @override
-  String get passwordHint => 'Şifrenizi girin';
+  String get passwordHint => 'Şifre';
 
   @override
-  String get nameHint => 'Ad soyadınızı girin';
+  String get confirmPassword => 'Şifre Tekrar';
+
+  @override
+  String get confirmPasswordHint => 'Şifre Tekrar';
+
+  @override
+  String get passwordMismatch => 'Şifreler eşleşmiyor';
+
+  @override
+  String get nameHint => 'Ad Soyad';
 
   @override
   String get emailRequired => 'E-posta gereklidir';
@@ -166,4 +175,16 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get description => 'Açıklama';
+
+  @override
+  String get termsPrefix => 'Kullanıcı sözleşmesini ';
+
+  @override
+  String get termsLink => 'Okudum ve Kabul ediyorum.';
+
+  @override
+  String get termsSuffix => 'Bu sözleşmeyi okuyarak devam ediniz lütfen.';
+
+  @override
+  String get termsRequired => 'Kullanıcı sözleşmesini kabul etmelisiniz.';
 }
