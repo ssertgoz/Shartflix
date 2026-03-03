@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:see_more_text/see_more_text.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/movie_entity.dart';
@@ -23,16 +24,6 @@ class MovieReelItem extends StatefulWidget {
 }
 
 class _MovieReelItemState extends State<MovieReelItem> {
-  bool _descriptionExpanded = false;
-
-  @override
-  void didUpdateWidget(MovieReelItem oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.movie.id != widget.movie.id) {
-      _descriptionExpanded = false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final movie = widget.movie;
@@ -72,7 +63,7 @@ class _MovieReelItemState extends State<MovieReelItem> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 16),
                   Expanded(
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +76,7 @@ class _MovieReelItemState extends State<MovieReelItem> {
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 22,
+                            fontSize: 18,
                             fontWeight: FontWeight.w700,
                             fontFamily: 'InstrumentSans',
                             shadows: [
@@ -95,35 +86,26 @@ class _MovieReelItemState extends State<MovieReelItem> {
                         ),
                       ),
                       if (movie.description.isNotEmpty) ...[
-                        const SizedBox(height: 8),
-                        Text(
-                          movie.description,
-                          maxLines: _descriptionExpanded ? null : 2,
-                          overflow: _descriptionExpanded ? null : TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: AppColors.textSecondary,
+                        SeeMoreText(
+                          animationCurve: Curves.easeInOut,
+                          animationDuration: const Duration(milliseconds: 300),
+                          text: movie.description,
+                          maxLines: 2,
+                          seeMoreText: ' Devamı Oku',
+                          seeLessText: ' Daha az',
+                          textStyle: const TextStyle(
+                            color: AppColors.white80,
                             fontSize: 14,
                             height: 1.35,
                             fontFamily: 'InstrumentSans',
-                            shadows: [
-                              Shadow(color: Colors.black45, blurRadius: 4),
-                            ],
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() => _descriptionExpanded = !_descriptionExpanded);
-                          },
-                          child: Text(
-                            _descriptionExpanded ? 'Daha az' : 'Devamı Oku',
-                            style: const TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'InstrumentSans',
-                            ),
+                          seeMoreLessTextStyle: const TextStyle(
+                            color: AppColors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'InstrumentSans',
                           ),
+                          enableTextTapToggle: true,
                         ),
                       ],
                     ],
@@ -135,7 +117,7 @@ class _MovieReelItemState extends State<MovieReelItem> {
         ),
         Positioned(
           right: 16,
-          bottom: 250,
+          bottom: 200,
           child: GestureDetector(
             onTap: onFavoriteToggle,
             child: ClipRRect(
