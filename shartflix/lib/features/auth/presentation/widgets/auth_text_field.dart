@@ -43,17 +43,37 @@ class _AuthTextFieldState extends State<AuthTextField> {
         fontFamily: 'InstrumentSans',
       ),
       decoration: InputDecoration(
-        labelText: widget.label,
         hintText: widget.hint,
+        fillColor: AppColors.white5,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: BorderSide(color: AppColors.inputBorder, width: 1),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: BorderSide(color: AppColors.inputBorder, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: BorderSide(color: AppColors.inputBorder, width: 1),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: BorderSide(color: AppColors.inputBorder, width: 1),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: BorderSide(color: AppColors.inputBorder, width: 1),
+        ),
         prefixIcon: widget.prefixIconPath != null
             ? Padding(
                 padding: const EdgeInsets.all(14),
                 child: SvgPicture.asset(
                   widget.prefixIconPath!,
-                  width: 20,
-                  height: 20,
+                  width: 24,
+                  height: 24,
                   colorFilter: const ColorFilter.mode(
-                    AppColors.textHint,
+                    AppColors.white,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -62,11 +82,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: SvgPicture.asset(
-                  _obscureText
-                      ? AppAssets.icons.hide
-                      : AppAssets.icons.see,
-                  width: 20,
-                  height: 20,
+                  _obscureText ? AppAssets.icons.hide : AppAssets.icons.see,
+                  width: 24,
+                  height: 24,
                   colorFilter: const ColorFilter.mode(
                     AppColors.textHint,
                     BlendMode.srcIn,

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/auth_background.dart';
 import '../bloc/auth_bloc.dart';
+import '../widgets/auth_button.dart';
 import '../widgets/auth_text_field.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 
@@ -72,160 +74,134 @@ class _LoginViewState extends State<_LoginView> {
       child: Scaffold(
         body: AuthBackground(
           child: SafeArea(
+            top: false,
             child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 56),
-                _buildLogo(),
-                const SizedBox(height: 40),
-                _buildHeader(context, l10n),
-                const SizedBox(height: 36),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      AuthTextField(
-                        controller: _emailController,
-                        label: l10n.email,
-                        hint: l10n.emailHint,
-                        keyboardType: TextInputType.emailAddress,
-                        prefixIconPath: AppAssets.icons.mail,
-                        validator: (v) {
-                          if (v == null || v.isEmpty) return l10n.emailRequired;
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
-                            return l10n.emailInvalid;
-                          }
-                          return null;
-                        },
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: Center(
+                      child: Lottie.asset(
+                        AppAssets.animations.loading,
+                        fit: BoxFit.contain,
+                        repeat: true,
                       ),
-                      const SizedBox(height: 14),
-                      AuthTextField(
-                        controller: _passwordController,
-                        label: l10n.password,
-                        hint: l10n.passwordHint,
-                        isPassword: true,
-                        prefixIconPath: AppAssets.icons.lock,
-                        validator: (v) {
-                          if (v == null || v.isEmpty) return l10n.passwordRequired;
-                          if (v.length < 6) return l10n.passwordTooShort;
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 6),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text(
-                            l10n.forgotPassword,
-                            style: const TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 13,
-                              fontFamily: 'InstrumentSans',
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  _buildLogo(),
+                  _buildHeader(context, l10n),
+                  const SizedBox(height: 36),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        AuthTextField(
+                          controller: _emailController,
+                          label: l10n.email,
+                          hint: l10n.emailHint,
+                          keyboardType: TextInputType.emailAddress,
+                          prefixIconPath: AppAssets.icons.mail,
+                          validator: (v) {
+                            if (v == null || v.isEmpty) return l10n.emailRequired;
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
+                              return l10n.emailInvalid;
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 14),
+                        AuthTextField(
+                          controller: _passwordController,
+                          label: l10n.password,
+                          hint: l10n.passwordHint,
+                          isPassword: true,
+                          prefixIconPath: AppAssets.icons.lock,
+                          validator: (v) {
+                            if (v == null || v.isEmpty) return l10n.passwordRequired;
+                            if (v.length < 6) return l10n.passwordTooShort;
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 6),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {},
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: Text(
+                              l10n.forgotPassword,
+                              style: const TextStyle(
+                                color: AppColors.textSecondary,
+                                fontSize: 13,
+                                fontFamily: 'InstrumentSans',
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 28),
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          final isLoading = state is AuthLoading;
-                          return SizedBox(
-                            width: double.infinity,
-                            height: 52,
-                            child: ElevatedButton(
-                              onPressed: isLoading ? null : () => _submit(context),
-                              child: isLoading
-                                  ? const SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : Text(l10n.signInButton),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                        const SizedBox(height: 28),
+                        BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            return AuthButton(
+                              label: l10n.signInButton,
+                              isLoading: state is AuthLoading,
+                              onPressed: () => _submit(context),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 36),
-                _buildDivider(l10n),
-                const SizedBox(height: 28),
-                _buildSocialButtons(),
-                const SizedBox(height: 48),
-                _buildRegisterLink(context),
-                const SizedBox(height: 24),
-              ],
+                  const SizedBox(height: 36),
+                  _buildDivider(l10n),
+                  const SizedBox(height: 28),
+                  _buildSocialButtons(),
+                  const SizedBox(height: 48),
+                  _buildRegisterLink(context),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
-        ),
         ),
       ),
     );
   }
 
   Widget _buildLogo() {
-    return Row(
-      children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Center(
-            child: Text(
-              'N',
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-                fontFamily: 'InstrumentSans',
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        const Text(
-          'Shartflix',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary,
-            fontFamily: 'InstrumentSans',
-          ),
-        ),
-      ],
+    return Center(
+      child: Image.asset(
+        AppAssets.images.appIcon,
+        width: 90,
+        height: 90,
+        fit: BoxFit.cover,
+      ),
     );
   }
 
   Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.welcomeBack,
-          style: Theme.of(context).textTheme.headlineLarge,
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'Shartflix\'e giriş yapın',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-      ],
-    );
+    return SizedBox(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              l10n.login,
+              style: Theme.of(context).textTheme.headlineLarge,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Kullınıcı bilgilerinle giriş yap',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ));
   }
 
   Widget _buildDivider(AppLocalizations l10n) {

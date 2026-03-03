@@ -43,7 +43,7 @@ class AppColors {
   /// Slightly darker for header button (Fotoğraf Ekle)
   static const Color profileHeaderButtonBg = Color(0xFF170B0D);
   static const Color inputBackground = Color(0xFF1C1C1E);
-  static const Color inputBorder = Color(0xFF2C2C2E);
+  static const Color inputBorder = white20;
 
   static const Color textPrimary = Color(0xFFFFFFFF);
   static const Color textSecondary = Color(0xFFAAAAAA);

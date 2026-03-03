@@ -7,6 +7,7 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/auth_background.dart';
 import '../bloc/auth_bloc.dart';
+import '../widgets/auth_button.dart';
 import '../widgets/auth_text_field.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 
@@ -144,23 +145,10 @@ class _RegisterViewState extends State<_RegisterView> {
                       const SizedBox(height: 32),
                       BlocBuilder<AuthBloc, AuthState>(
                         builder: (context, state) {
-                          final isLoading = state is AuthLoading;
-                          return SizedBox(
-                            width: double.infinity,
-                            height: 52,
-                            child: ElevatedButton(
-                              onPressed: isLoading ? null : () => _submit(context),
-                              child: isLoading
-                                  ? const SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : Text(l10n.signUpButton),
-                            ),
+                          return AuthButton(
+                            label: l10n.signUpButton,
+                            isLoading: state is AuthLoading,
+                            onPressed: () => _submit(context),
                           );
                         },
                       ),
