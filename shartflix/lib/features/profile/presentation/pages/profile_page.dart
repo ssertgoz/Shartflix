@@ -159,22 +159,23 @@ class _ProfileView extends StatelessWidget {
             ),
           ),
           onPressed: () {
+            final authBloc = context.read<AuthBloc>();
             showDialog(
               context: context,
-              builder: (_) => AlertDialog(
+              builder: (dialogContext) => AlertDialog(
                 backgroundColor: AppColors.surfaceElevated,
                 title: const Text('Çıkış Yap', style: TextStyle(color: AppColors.textPrimary)),
                 content: const Text('Hesabınızdan çıkmak istiyor musunuz?',
                     style: TextStyle(color: AppColors.textSecondary)),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(dialogContext),
                     child: const Text('İptal', style: TextStyle(color: AppColors.textSecondary)),
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
-                      context.read<AuthBloc>().add(const LogoutRequested());
+                      Navigator.pop(dialogContext);
+                      authBloc.add(const LogoutRequested());
                     },
                     child: Text(l10n.logout,
                         style: const TextStyle(color: AppColors.primary)),

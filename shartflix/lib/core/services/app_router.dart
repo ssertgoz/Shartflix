@@ -33,19 +33,31 @@ class AppRouter {
             path: AppRoutes.register,
             builder: (_, __) => const RegisterPage(),
           ),
-          ShellRoute(
-            builder: (context, state, child) => _MainShell(
+          StatefulShellRoute.indexedStack(
+            builder: (context, state, navigationShell) => _MainShell(
+              navigationShell: navigationShell,
               location: state.uri.toString(),
-              child: child,
             ),
-            routes: [
-              GoRoute(
-                path: AppRoutes.home,
-                builder: (_, __) => const HomePage(),
+            branches: [
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
+                    path: AppRoutes.home,
+                    pageBuilder: (context, state) => const NoTransitionPage(
+                      child: HomePage(),
+                    ),
+                  ),
+                ],
               ),
-              GoRoute(
-                path: AppRoutes.profile,
-                builder: (_, __) => const ProfilePage(),
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
+                    path: AppRoutes.profile,
+                    pageBuilder: (context, state) => const NoTransitionPage(
+                      child: ProfilePage(),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -69,55 +81,65 @@ class AppRouter {
   }
 }
 
-class _MainShell extends StatefulWidget {
-  final Widget child;
+class _MainShell extends StatelessWidget {
+  final StatefulNavigationShell navigationShell;
   final String location;
 
-  const _MainShell({required this.child, required this.location});
-
-  @override
-  State<_MainShell> createState() => _MainShellState();
-}
-
-class _NavItem extends StatelessWidget {
-  final String svgPath;
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _NavItem({
-    required this.svgPath,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
+  const _MainShell({
+    required this.navigationShell,
+    required this.location,
   });
+
+  int get _selectedIndex => location.startsWith(AppRoutes.profile) ? 1 : 0;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(child: navigationShell),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _buildBottomNav(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNav(BuildContext context) {
+    final isHome = _selectedIndex == 0;
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+        child: Row(
           children: [
-            SvgPicture.asset(
-              svgPath,
-              width: 24,
-              height: 24,
-              colorFilter: ColorFilter.mode(
-                isSelected ? AppColors.primary : AppColors.textHint,
-                BlendMode.srcIn,
+            Expanded(
+              child: _NavButton(
+                svgPath: isHome ? AppAssets.icons.homeFill : AppAssets.icons.home,
+                label: 'Anasayfa',
+                isSelected: isHome,
+                onTap: () {
+                  if (_selectedIndex != 0) {
+                    context.go(AppRoutes.home);
+                  }
+                },
               ),
             ),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              style: TextStyle(
-                fontFamily: 'InstrumentSans',
-                fontSize: 10,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                color: isSelected ? AppColors.primary : AppColors.textHint,
+            const SizedBox(width: 12),
+            Expanded(
+              child: _NavButton(
+                svgPath: isHome ? AppAssets.icons.profile : AppAssets.icons.profileFill,
+                label: 'Profil',
+                isSelected: _selectedIndex == 1,
+                onTap: () {
+                  if (_selectedIndex != 1) {
+                    context.go(AppRoutes.profile);
+                  }
+                },
               ),
             ),
           ],
@@ -127,66 +149,55 @@ class _NavItem extends StatelessWidget {
   }
 }
 
-class _MainShellState extends State<_MainShell> {
-  int _selectedIndex = 0;
+class _NavButton extends StatelessWidget {
+  final String svgPath;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
 
-  @override
-  void didUpdateWidget(_MainShell oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _updateIndex(widget.location);
-  }
-
-  void _updateIndex(String location) {
-    if (location.startsWith(AppRoutes.profile)) {
-      setState(() => _selectedIndex = 1);
-    } else {
-      setState(() => _selectedIndex = 0);
-    }
-  }
+  const _NavButton({
+    required this.svgPath,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: widget.child,
-      bottomNavigationBar: _buildBottomNav(context),
-    );
-  }
-
-  Widget _buildBottomNav(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.navBackground,
-        border: Border(
-          top: BorderSide(color: AppColors.divider, width: 0.5),
-        ),
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          height: 60,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(999),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            gradient: isSelected ? AppColors.gradientPrimary : null,
+            color: isSelected ? null : AppColors.surface,
+            borderRadius: BorderRadius.circular(999),
+            border: isSelected ? null : Border.all(color: AppColors.divider, width: 0.5),
+          ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _NavItem(
-                svgPath: _selectedIndex == 0
-                    ? AppAssets.icons.homeFill
-                    : AppAssets.icons.home,
-                label: 'Ana Sayfa',
-                isSelected: _selectedIndex == 0,
-                onTap: () {
-                  setState(() => _selectedIndex = 0);
-                  context.go(AppRoutes.home);
-                },
+              SvgPicture.asset(
+                svgPath,
+                width: 22,
+                height: 22,
+                colorFilter: ColorFilter.mode(
+                  isSelected ? AppColors.white : AppColors.textHint,
+                  BlendMode.srcIn,
+                ),
               ),
-              _NavItem(
-                svgPath: _selectedIndex == 1
-                    ? AppAssets.icons.profileFill
-                    : AppAssets.icons.profile,
-                label: 'Profil',
-                isSelected: _selectedIndex == 1,
-                onTap: () {
-                  setState(() => _selectedIndex = 1);
-                  context.go(AppRoutes.profile);
-                },
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: TextStyle(
+                  fontFamily: 'InstrumentSans',
+                  fontSize: 14,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected ? AppColors.white : AppColors.textSecondary,
+                ),
               ),
             ],
           ),

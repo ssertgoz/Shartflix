@@ -51,15 +51,18 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
     try {
       final response = await _apiClient.get(ApiConstants.movieFavorites);
       final map = response.data as Map<String, dynamic>;
+      final data = map['data'];
 
-      // Unwrap optional top-level `data` envelope
-      final payload = map['data'] is Map<String, dynamic>
-          ? map['data'] as Map<String, dynamic>
-          : map;
+      // API returns data as the array directly: { response: {...}, data: [{...}, {...}] }
+      final List<dynamic> rawList;
+      if (data is List<dynamic>) {
+        rawList = data;
+      } else if (data is Map<String, dynamic> && data['movies'] is List<dynamic>) {
+        rawList = data['movies'] as List<dynamic>;
+      } else {
+        rawList = const [];
+      }
 
-      // The favorites endpoint returns movies with lowercase keys
-      // (id, title, description, posterUrl) — MovieModel.fromJson handles both
-      final rawList = payload['movies'] as List<dynamic>? ?? const [];
       return rawList
           .map((e) => MovieModel.fromJson(e as Map<String, dynamic>))
           .toList();

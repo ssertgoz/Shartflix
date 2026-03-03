@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../bloc/home_bloc.dart';
-import '../widgets/movie_card.dart';
+import '../widgets/movie_reel_item.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 
 class HomePage extends StatelessWidget {
@@ -29,35 +28,27 @@ class _HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<_HomeView> {
-  final _scrollController = ScrollController();
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    _pageController = PageController();
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_isBottom) {
-      final bloc = context.read<HomeBloc>();
-      final state = bloc.state;
-      if (!state.hasReachedMax && state.status != HomeStatus.loadingMore) {
-        bloc.add(FetchMovies(page: state.currentPage + 1));
-      }
+  void _onPageChanged(int index, HomeState state) {
+    final bloc = context.read<HomeBloc>();
+    if (index >= state.movies.length - 2 &&
+        !state.hasReachedMax &&
+        state.status != HomeStatus.loadingMore) {
+      bloc.add(FetchMovies(page: state.currentPage + 1));
     }
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= maxScroll * 0.8;
   }
 
   @override
@@ -65,196 +56,67 @@ class _HomeViewState extends State<_HomeView> {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: RefreshIndicator(
-        color: AppColors.primary,
-        backgroundColor: AppColors.surfaceElevated,
-        onRefresh: () async {
-          context.read<HomeBloc>().add(const RefreshMovies());
-          await Future.delayed(const Duration(milliseconds: 600));
-        },
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            _buildAppBar(context, l10n),
-            _buildBody(context, l10n),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAppBar(BuildContext context, AppLocalizations l10n) {
-    return SliverAppBar(
-      floating: true,
-      snap: true,
-      backgroundColor: AppColors.background,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      title: Row(
-        children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(7),
-            ),
-            child: const Center(
-              child: Text(
-                'N',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  fontFamily: 'InstrumentSans',
-                ),
+      body: BlocConsumer<HomeBloc, HomeState>(
+        listener: (context, state) {
+          if (state.status == HomeStatus.failure && state.movies.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage ?? l10n.unknownError),
+                backgroundColor: AppColors.error,
               ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            l10n.explore,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ],
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.search_rounded, color: AppColors.textPrimary, size: 22),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.notifications_none_rounded,
-              color: AppColors.textPrimary, size: 22),
-          onPressed: () {},
-        ),
-        const SizedBox(width: 4),
-      ],
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1),
-        child: Container(height: 1, color: AppColors.divider),
-      ),
-    );
-  }
-
-  Widget _buildBody(BuildContext context, AppLocalizations l10n) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        if (state.status == HomeStatus.initial ||
-            state.status == HomeStatus.loading) {
-          return const SliverFillRemaining(
-            child: Center(
+            );
+          }
+        },
+        buildWhen: (prev, curr) =>
+            prev.movies.length != curr.movies.length ||
+            prev.status != curr.status ||
+            prev.favoriteIds != curr.favoriteIds,
+        builder: (context, state) {
+          if (state.status == HomeStatus.initial || state.status == HomeStatus.loading) {
+            return const Center(
               child: CircularProgressIndicator(
                 color: AppColors.primary,
                 strokeWidth: 2,
               ),
-            ),
-          );
-        }
+            );
+          }
 
-        if (state.status == HomeStatus.failure && state.movies.isEmpty) {
-          return SliverFillRemaining(
-            child: _ErrorView(
+          if (state.status == HomeStatus.failure && state.movies.isEmpty) {
+            return _ErrorView(
               message: state.errorMessage ?? l10n.unknownError,
-              onRetry: () =>
-                  context.read<HomeBloc>().add(const FetchMovies(page: 1)),
-            ),
-          );
-        }
+              onRetry: () => context.read<HomeBloc>().add(const FetchMovies(page: 1)),
+            );
+          }
 
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              if (index == 0) {
-                return _buildSectionHeader(context, state, l10n);
-              }
-              final movieIndex = index - 1;
-              if (movieIndex < state.movies.length) {
-                final movie = state.movies[movieIndex];
-                return MovieCard(
-                  movie: movie,
-                  onFavoriteToggle: () => context
-                      .read<HomeBloc>()
-                      .add(ToggleFavoriteMovie(movie.id)),
+          final movieCount = state.movies.length;
+          final showLoader = !state.hasReachedMax && state.status == HomeStatus.loadingMore;
+          final itemCount = movieCount + (showLoader ? 1 : 0);
+
+          return PageView.builder(
+            controller: _pageController,
+            scrollDirection: Axis.vertical,
+            itemCount: itemCount,
+            onPageChanged: (index) => _onPageChanged(index, state),
+            itemBuilder: (context, index) {
+              if (index >= movieCount) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primary,
+                    strokeWidth: 2,
+                  ),
                 );
               }
-              return _buildBottomLoader(state);
+              final movie = state.movies[index];
+              return MovieReelItem(
+                key: ValueKey(movie.id),
+                movie: movie,
+                onFavoriteToggle: () => context.read<HomeBloc>().add(ToggleFavoriteMovie(movie.id)),
+              );
             },
-            childCount: state.movies.length + 1 + (state.hasReachedMax ? 0 : 1),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildSectionHeader(
-    BuildContext context,
-    HomeState state,
-    AppLocalizations l10n,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Filmler',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          if (state.movies.isNotEmpty)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SvgPicture.asset(
-                    AppAssets.icons.heartFill,
-                    width: 12,
-                    height: 12,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.primary,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${state.favoriteIds.length} favori',
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'InstrumentSans',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
+          );
+        },
       ),
     );
-  }
-
-  Widget _buildBottomLoader(HomeState state) {
-    if (state.status == HomeStatus.loadingMore) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        child: Center(
-          child: SizedBox(
-            width: 56,
-            height: 56,
-            child: Lottie.asset(
-              AppAssets.animations.loading,
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-      );
-    }
-    return const SizedBox(height: 24);
   }
 }
 
@@ -294,7 +156,10 @@ class _ErrorView extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 13,
+              ),
             ),
             const SizedBox(height: 28),
             SizedBox(

@@ -71,6 +71,19 @@ class AppColors {
     stops: [0.3, 1.0],
   );
 
+  /// Reel bottom overlay: 180deg, transparent in middle, dark at top (40%) and bottom (90%)
+  static const LinearGradient reelBottomGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Color(0x66090909), // rgba(9,9,9,0.4) at 0%
+      Color(0x00090909), // transparent at 15.38%
+      Color(0x00090909), // transparent at 74.04%
+      Color(0xE6090909), // rgba(9,9,9,0.9) at 89.42%
+    ],
+    stops: [0.0, 0.1538, 0.7404, 0.8942],
+  );
+
   /// Splash / header (dark red → black)
   static const LinearGradient splashGradient = LinearGradient(
     begin: Alignment.topCenter,
