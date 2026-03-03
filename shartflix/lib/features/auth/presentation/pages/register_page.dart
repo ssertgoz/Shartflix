@@ -5,6 +5,7 @@ import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/auth_background.dart';
 import '../bloc/auth_bloc.dart';
 import '../widgets/auth_text_field.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
@@ -78,9 +79,8 @@ class _RegisterViewState extends State<_RegisterView> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: AppColors.background,
+          backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new,
@@ -88,8 +88,9 @@ class _RegisterViewState extends State<_RegisterView> {
             onPressed: () => context.go(AppRoutes.login),
           ),
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
+        body: AuthBackground(
+          child: SafeArea(
+            child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,6 +173,7 @@ class _RegisterViewState extends State<_RegisterView> {
               ],
             ),
           ),
+        ),
         ),
       ),
     );

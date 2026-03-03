@@ -6,6 +6,7 @@ import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/auth_background.dart';
 import '../bloc/auth_bloc.dart';
 import '../widgets/auth_text_field.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
@@ -69,9 +70,9 @@ class _LoginViewState extends State<_LoginView> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
-        body: SafeArea(
-          child: SingleChildScrollView(
+        body: AuthBackground(
+          child: SafeArea(
+            child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,6 +169,7 @@ class _LoginViewState extends State<_LoginView> {
               ],
             ),
           ),
+        ),
         ),
       ),
     );

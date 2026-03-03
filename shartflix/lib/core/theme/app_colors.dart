@@ -114,6 +114,22 @@ class AppColors {
     stops: [0.0, 0.8],
   );
 
+  /// Auth/splash background: linear (0deg #090909 40% → #3F0306 100%)
+  static const LinearGradient authBackgroundLinear = LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+    colors: [Color(0xFF090909), Color(0xFF3F0306)],
+    stops: [0.4, 1.0],
+  );
+
+  /// Auth/splash background: radial center glow (#FF1B1B → transparent)
+  static const RadialGradient authBackgroundRadial = RadialGradient(
+    center: Alignment(0, -1),
+    radius: 1,
+    colors: [Color(0xFFFF1B1B), Color(0x008D0000)],
+    stops: [0.0, 0.5],
+  );
+
   static const LinearGradient headerGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,

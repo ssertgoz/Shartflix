@@ -35,8 +35,7 @@ class _RefreshProfileWhenVisible extends StatefulWidget {
   const _RefreshProfileWhenVisible({required this.child});
 
   @override
-  State<_RefreshProfileWhenVisible> createState() =>
-      _RefreshProfileWhenVisibleState();
+  State<_RefreshProfileWhenVisible> createState() => _RefreshProfileWhenVisibleState();
 }
 
 class _RefreshProfileWhenVisibleState extends State<_RefreshProfileWhenVisible> {
@@ -47,8 +46,7 @@ class _RefreshProfileWhenVisibleState extends State<_RefreshProfileWhenVisible> 
     super.didChangeDependencies();
     final location = GoRouterState.of(context).uri.toString();
     final isProfileTab = location == AppRoutes.profile;
-    if (isProfileTab &&
-        (_lastLocation == null || _lastLocation != AppRoutes.profile)) {
+    if (isProfileTab && (_lastLocation == null || _lastLocation != AppRoutes.profile)) {
       context.read<ProfileBloc>().add(const FetchProfile());
     }
     _lastLocation = location;
@@ -102,19 +100,15 @@ class _ProfileView extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.error_outline,
-                          color: AppColors.error, size: 48),
+                      const Icon(Icons.error_outline, color: AppColors.error, size: 48),
                       const SizedBox(height: 16),
                       Text(
                         state.errorMessage ?? l10n.unknownError,
-                        style: const TextStyle(
-                            color: AppColors.textSecondary),
+                        style: const TextStyle(color: AppColors.textSecondary),
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: () => context
-                            .read<ProfileBloc>()
-                            .add(const FetchProfile()),
+                        onPressed: () => context.read<ProfileBloc>().add(const FetchProfile()),
                         child: Text(l10n.tryAgain),
                       ),
                     ],
@@ -128,8 +122,7 @@ class _ProfileView extends StatelessWidget {
                   children: [
                     ProfileAppBar(
                       l10n: l10n,
-                      onLimitedOfferTap: () =>
-                          showLimitedOfferBottomSheet(context),
+                      onLimitedOfferTap: () => showLimitedOfferBottomSheet(context),
                     ),
                     ProfileHeader(
                       user: state.user,
