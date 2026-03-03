@@ -80,88 +80,80 @@ class _RegisterViewState extends State<_RegisterView> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new,
-                color: AppColors.textPrimary, size: 20),
-            onPressed: () => context.go(AppRoutes.login),
-          ),
-        ),
         body: AuthBackground(
           child: SafeArea(
+            top: false,
             child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 12),
-                _buildHeader(context, l10n),
-                const SizedBox(height: 36),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      AuthTextField(
-                        controller: _nameController,
-                        label: l10n.name,
-                        hint: l10n.nameHint,
-                        keyboardType: TextInputType.name,
-                        prefixIconPath: AppAssets.icons.user,
-                        validator: (v) {
-                          if (v == null || v.isEmpty) return l10n.nameRequired;
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 14),
-                      AuthTextField(
-                        controller: _emailController,
-                        label: l10n.email,
-                        hint: l10n.emailHint,
-                        keyboardType: TextInputType.emailAddress,
-                        prefixIconPath: AppAssets.icons.mail,
-                        validator: (v) {
-                          if (v == null || v.isEmpty) return l10n.emailRequired;
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
-                            return l10n.emailInvalid;
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 14),
-                      AuthTextField(
-                        controller: _passwordController,
-                        label: l10n.password,
-                        hint: l10n.passwordHint,
-                        isPassword: true,
-                        prefixIconPath: AppAssets.icons.lock,
-                        validator: (v) {
-                          if (v == null || v.isEmpty) return l10n.passwordRequired;
-                          if (v.length < 6) return l10n.passwordTooShort;
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 32),
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          return AuthButton(
-                            label: l10n.signUpButton,
-                            isLoading: state is AuthLoading,
-                            onPressed: () => _submit(context),
-                          );
-                        },
-                      ),
-                    ],
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 12),
+                  _buildHeader(context, l10n),
+                  const SizedBox(height: 36),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        AuthTextField(
+                          controller: _nameController,
+                          label: l10n.name,
+                          hint: l10n.nameHint,
+                          keyboardType: TextInputType.name,
+                          prefixIconPath: AppAssets.icons.user,
+                          validator: (v) {
+                            if (v == null || v.isEmpty) return l10n.nameRequired;
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 14),
+                        AuthTextField(
+                          controller: _emailController,
+                          label: l10n.email,
+                          hint: l10n.emailHint,
+                          keyboardType: TextInputType.emailAddress,
+                          prefixIconPath: AppAssets.icons.mail,
+                          validator: (v) {
+                            if (v == null || v.isEmpty) return l10n.emailRequired;
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
+                              return l10n.emailInvalid;
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 14),
+                        AuthTextField(
+                          controller: _passwordController,
+                          label: l10n.password,
+                          hint: l10n.passwordHint,
+                          isPassword: true,
+                          prefixIconPath: AppAssets.icons.lock,
+                          validator: (v) {
+                            if (v == null || v.isEmpty) return l10n.passwordRequired;
+                            if (v.length < 6) return l10n.passwordTooShort;
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 32),
+                        BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            return AuthButton(
+                              label: l10n.signUpButton,
+                              isLoading: state is AuthLoading,
+                              onPressed: () => _submit(context),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 40),
-                _buildLoginLink(context),
-                const SizedBox(height: 24),
-              ],
+                  const SizedBox(height: 40),
+                  _buildLoginLink(context),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
-        ),
         ),
       ),
     );

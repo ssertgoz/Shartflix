@@ -90,7 +90,6 @@ class _LoginViewState extends State<_LoginView> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
                   _buildLogo(),
                   _buildHeader(context, l10n),
                   const SizedBox(height: 36),
@@ -138,8 +137,9 @@ class _LoginViewState extends State<_LoginView> {
                             child: Text(
                               l10n.forgotPassword,
                               style: const TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 13,
+                                color: AppColors.textPrimary,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                                 fontFamily: 'InstrumentSans',
                               ),
                             ),
@@ -158,13 +158,10 @@ class _LoginViewState extends State<_LoginView> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 36),
-                  _buildDivider(l10n),
-                  const SizedBox(height: 28),
-                  _buildSocialButtons(),
-                  const SizedBox(height: 48),
-                  _buildRegisterLink(context),
                   const SizedBox(height: 24),
+                  _buildSocialButtons(),
+                  const SizedBox(height: 24),
+                  _buildRegisterLink(context),
                 ],
               ),
             ),
@@ -204,56 +201,26 @@ class _LoginViewState extends State<_LoginView> {
         ));
   }
 
-  Widget _buildDivider(AppLocalizations l10n) {
-    return Row(
-      children: [
-        const Expanded(
-          child: Divider(color: AppColors.divider, thickness: 1),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-            l10n.orContinueWith,
-            style: const TextStyle(
-              color: AppColors.textHint,
-              fontSize: 12,
-              fontFamily: 'InstrumentSans',
-            ),
-          ),
-        ),
-        const Expanded(
-          child: Divider(color: AppColors.divider, thickness: 1),
-        ),
-      ],
-    );
-  }
-
   Widget _buildSocialButtons() {
     return Row(
+      spacing: 16,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: _SocialButton(
-            svgPath: AppAssets.icons.google,
-            label: 'Google',
-            onTap: () {},
-          ),
+        _SocialButton(
+          svgPath: AppAssets.icons.google,
+          label: 'Google',
+          onTap: () {},
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _SocialButton(
-            svgPath: AppAssets.icons.apple,
-            label: 'Apple',
-            onTap: () {},
-          ),
+        _SocialButton(
+          svgPath: AppAssets.icons.apple,
+          label: 'Apple',
+          onTap: () {},
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _SocialButton(
-            svgPath: AppAssets.icons.facebook,
-            label: 'Facebook',
-            onTap: () {},
-          ),
-        ),
+        _SocialButton(
+          svgPath: AppAssets.icons.facebook,
+          label: 'Facebook',
+          onTap: () {},
+        )
       ],
     );
   }
@@ -270,13 +237,12 @@ class _LoginViewState extends State<_LoginView> {
               fontFamily: 'InstrumentSans',
             ),
             children: [
-              TextSpan(text: 'Shartflix\'e yeni misiniz? '),
+              TextSpan(text: 'Bir hesabın yok mu? '),
               TextSpan(
-                text: 'Kaydolun.',
+                text: ' Kayıt Ol',
                 style: TextStyle(
                   color: AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
-                  decoration: TextDecoration.underline,
                   decorationColor: AppColors.textPrimary,
                 ),
               ),
@@ -303,31 +269,20 @@ class _SocialButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        width: 60,
+        height: 60,
+        padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           color: AppColors.inputBackground,
           border: Border.all(color: AppColors.inputBorder),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(16),
         ),
-        child: Column(
-          children: [
-            SvgPicture.asset(
-              svgPath,
-              width: 22,
-              height: 22,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 11,
-                fontFamily: 'InstrumentSans',
-              ),
-            ),
-          ],
+        child: SvgPicture.asset(
+          svgPath,
+          width: 24,
+          height: 24,
         ),
       ),
     );
