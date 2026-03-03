@@ -108,6 +108,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get limitedOffer => 'Limited Offer';
 
   @override
+  String get addPhoto => 'Add Photo';
+
+  @override
+  String get myLikes => 'My Likes';
+
+  @override
   String get limitedOfferSubtitle =>
       'Special pricing for the first subscribers!';
 

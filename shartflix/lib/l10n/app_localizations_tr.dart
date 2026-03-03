@@ -105,7 +105,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noFavorites => 'Henüz favori film yok';
 
   @override
-  String get limitedOffer => 'Sınır Teklif';
+  String get limitedOffer => 'Sınırlı Teklif';
+
+  @override
+  String get addPhoto => 'Fotoğraf Ekle';
+
+  @override
+  String get myLikes => 'Beğendiklerim';
 
   @override
   String get limitedOfferSubtitle => 'İlk aboneler için özel fiyatlandırma!';

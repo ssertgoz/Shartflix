@@ -296,6 +296,18 @@ abstract class AppLocalizations {
   /// **'Limited Offer'**
   String get limitedOffer;
 
+  /// No description provided for @addPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photo'**
+  String get addPhoto;
+
+  /// No description provided for @myLikes.
+  ///
+  /// In en, this message translates to:
+  /// **'My Likes'**
+  String get myLikes;
+
   /// No description provided for @limitedOfferSubtitle.
   ///
   /// In en, this message translates to:

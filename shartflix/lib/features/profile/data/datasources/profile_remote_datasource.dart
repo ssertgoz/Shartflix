@@ -18,7 +18,12 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   Future<UserModel> getProfile() async {
     try {
       final response = await _apiClient.get(ApiConstants.profile);
-      return UserModel.fromJson(response.data as Map<String, dynamic>);
+      final map = response.data as Map<String, dynamic>;
+      // API returns { response: {...}, data: { _id, id, name, email, photoUrl } }
+      final data = map['data'] is Map<String, dynamic>
+          ? map['data'] as Map<String, dynamic>
+          : map;
+      return UserModel.fromJson(data);
     } on DioException catch (e) {
       throw handleDioException(e);
     } catch (e) {
@@ -37,8 +42,13 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         data: formData,
         options: Options(contentType: 'multipart/form-data'),
       );
-      final data = response.data as Map<String, dynamic>;
-      return data['photoUrl'] as String;
+      final map = response.data as Map<String, dynamic>;
+      // API returns { response: {...}, data: { _id, id, name, email, photoUrl } }
+      final data = map['data'] is Map<String, dynamic>
+          ? map['data'] as Map<String, dynamic>
+          : map;
+      final photoUrl = data['photoUrl'] as String? ?? '';
+      return photoUrl;
     } on DioException catch (e) {
       throw handleDioException(e);
     } catch (e) {

@@ -36,6 +36,10 @@ class AppColors {
   static const Color surfaceElevated = Color(0xFF1C1C1C);
   static const Color card = Color(0xFF181818);
   static const Color navBackground = Color(0xFF111111);
+  /// Dark reddish-brown for profile header
+  static const Color profileHeaderBg = Color(0xFF1E1012);
+  /// Slightly darker for header button (Fotoğraf Ekle)
+  static const Color profileHeaderButtonBg = Color(0xFF170B0D);
   static const Color inputBackground = Color(0xFF1C1C1E);
   static const Color inputBorder = Color(0xFF2C2C2E);
 
@@ -69,6 +73,14 @@ class AppColors {
     end: Alignment.bottomCenter,
     colors: [Color(0x00000000), Color(0xE6000000)],
     stops: [0.3, 1.0],
+  );
+
+  /// Profile page background (0deg: #090909 40% → #3F0306 100%, bottom to top)
+  static const LinearGradient profilePageGradient = LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+    colors: [Color(0xFF090909), Color(0xFF3F0306)],
+    stops: [0.4, 1.0],
   );
 
   /// Reel bottom overlay: 180deg, transparent in middle, dark at top (40%) and bottom (90%)

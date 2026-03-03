@@ -1,17 +1,16 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
-import '../../../home/domain/entities/movie_entity.dart';
 import '../bloc/profile_bloc.dart';
+import '../widgets/favorites_section.dart';
 import '../widgets/limited_offer_bottom_sheet.dart';
+import '../widgets/profile_app_bar.dart';
+import '../widgets/profile_header.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -56,428 +55,70 @@ class _ProfileView extends StatelessWidget {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
-        body: BlocBuilder<ProfileBloc, ProfileState>(
-          builder: (context, state) {
-            if (state.status == ProfileStatus.loading) {
-              return const Center(
-                child: CircularProgressIndicator(color: AppColors.primary),
-              );
-            }
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: AppColors.profilePageGradient,
+          ),
+          child: BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, state) {
+              if (state.status == ProfileStatus.loading) {
+                return const Center(
+                  child: CircularProgressIndicator(color: AppColors.primary),
+                );
+              }
 
-            if (state.status == ProfileStatus.failure && state.user == null) {
-              return Center(
+              if (state.status == ProfileStatus.failure && state.user == null) {
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.error_outline,
+                          color: AppColors.error, size: 48),
+                      const SizedBox(height: 16),
+                      Text(
+                        state.errorMessage ?? l10n.unknownError,
+                        style: const TextStyle(
+                            color: AppColors.textSecondary),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () => context
+                            .read<ProfileBloc>()
+                            .add(const FetchProfile()),
+                        child: Text(l10n.tryAgain),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Icon(Icons.error_outline, color: AppColors.error, size: 48),
-                    const SizedBox(height: 16),
-                    Text(
-                      state.errorMessage ?? l10n.unknownError,
-                      style: const TextStyle(color: AppColors.textSecondary),
+                    ProfileAppBar(
+                      l10n: l10n,
+                      onLimitedOfferTap: () =>
+                          showLimitedOfferBottomSheet(context),
                     ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () =>
-                          context.read<ProfileBloc>().add(const FetchProfile()),
-                      child: Text(l10n.tryAgain),
+                    ProfileHeader(
+                      user: state.user,
+                      isUploadingPhoto: state.isUploadingPhoto,
+                      onPickPhoto: () => _pickAndUploadPhoto(context),
+                      l10n: l10n,
+                    ),
+                    FavoritesSection(
+                      favorites: state.favorites,
+                      l10n: l10n,
                     ),
                   ],
                 ),
               );
-            }
-
-            return CustomScrollView(
-              slivers: [
-                _buildAppBar(context, state, l10n),
-                _buildProfileHeader(context, state, l10n),
-                _buildFavoritesSection(context, state, l10n),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAppBar(
-    BuildContext context,
-    ProfileState state,
-    AppLocalizations l10n,
-  ) {
-    return SliverAppBar(
-      backgroundColor: AppColors.background,
-      elevation: 0,
-      floating: true,
-      title: Text(l10n.myProfile, style: Theme.of(context).textTheme.titleLarge),
-      actions: [
-        GestureDetector(
-          onTap: () => showLimitedOfferBottomSheet(context),
-          child: Container(
-            margin: const EdgeInsets.only(right: 4),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.3)),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgPicture.asset(
-                  AppAssets.icons.gem,
-                  width: 14,
-                  height: 14,
-                  colorFilter: const ColorFilter.mode(
-                    AppColors.primary,
-                    BlendMode.srcIn,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                const Text(
-                  'Sınır Teklif',
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'InstrumentSans',
-                  ),
-                ),
-              ],
-            ),
+            },
           ),
         ),
-        IconButton(
-          icon: SvgPicture.asset(
-            AppAssets.icons.x,
-            width: 20,
-            height: 20,
-            colorFilter: const ColorFilter.mode(
-              AppColors.textSecondary,
-              BlendMode.srcIn,
-            ),
-          ),
-          onPressed: () {
-            final authBloc = context.read<AuthBloc>();
-            showDialog(
-              context: context,
-              builder: (dialogContext) => AlertDialog(
-                backgroundColor: AppColors.surfaceElevated,
-                title: const Text('Çıkış Yap', style: TextStyle(color: AppColors.textPrimary)),
-                content: const Text('Hesabınızdan çıkmak istiyor musunuz?',
-                    style: TextStyle(color: AppColors.textSecondary)),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(dialogContext),
-                    child: const Text('İptal', style: TextStyle(color: AppColors.textSecondary)),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(dialogContext);
-                      authBloc.add(const LogoutRequested());
-                    },
-                    child: Text(l10n.logout,
-                        style: const TextStyle(color: AppColors.primary)),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProfileHeader(
-    BuildContext context,
-    ProfileState state,
-    AppLocalizations l10n,
-  ) {
-    final user = state.user;
-    return SliverToBoxAdapter(
-      child: Container(
-        margin: const EdgeInsets.all(20),
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.divider),
-        ),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () => _pickAndUploadPhoto(context),
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  _buildAvatar(state, user?.photoUrl),
-                  if (state.isUploadingPhoto)
-                    const Positioned.fill(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  Container(
-                    width: 26,
-                    height: 26,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.background, width: 2),
-                    ),
-                    child: Center(
-                      child: SvgPicture.asset(
-                        AppAssets.icons.plus,
-                        width: 12,
-                        height: 12,
-                        colorFilter: const ColorFilter.mode(
-                          Colors.white,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    user?.name ?? '',
-                    style: Theme.of(context).textTheme.titleLarge,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    user?.email ?? '',
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 13,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      _StatChip(
-                        label: '${state.favorites.length}',
-                        sublabel: l10n.favorites,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAvatar(ProfileState state, String? photoUrl) {
-    const size = 72.0;
-    if (photoUrl != null && photoUrl.isNotEmpty) {
-      return ClipOval(
-        child: CachedNetworkImage(
-          imageUrl: photoUrl,
-          width: size,
-          height: size,
-          fit: BoxFit.cover,
-          placeholder: (_, __) => _avatarPlaceholder(size),
-          errorWidget: (_, __, ___) => _avatarPlaceholder(size),
-        ),
-      );
-    }
-    return _avatarPlaceholder(size);
-  }
-
-  Widget _avatarPlaceholder(double size) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceElevated,
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: SvgPicture.asset(
-          AppAssets.icons.profile,
-          width: size * 0.5,
-          height: size * 0.5,
-          colorFilter: const ColorFilter.mode(
-            AppColors.textHint,
-            BlendMode.srcIn,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFavoritesSection(
-    BuildContext context,
-    ProfileState state,
-    AppLocalizations l10n,
-  ) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      sliver: SliverMainAxisGroup(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                l10n.favorites,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-          ),
-          if (state.favorites.isEmpty)
-            SliverToBoxAdapter(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 40),
-                  child: Column(
-                    children: [
-                      SvgPicture.asset(
-                        AppAssets.icons.heart,
-                        width: 48,
-                        height: 48,
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.textHint,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        l10n.noFavorites,
-                        style: const TextStyle(color: AppColors.textSecondary),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-          else
-            SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.65,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final movie = state.favorites[index];
-                  return _FavoriteMovieTile(movie: movie);
-                },
-                childCount: state.favorites.length,
-              ),
-            ),
-          const SliverToBoxAdapter(child: SizedBox(height: 32)),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatChip extends StatelessWidget {
-  final String label;
-  final String sublabel;
-
-  const _StatChip({required this.label, required this.sublabel});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            AppAssets.icons.heartFill,
-            width: 12,
-            height: 12,
-            colorFilter: const ColorFilter.mode(
-              AppColors.primary,
-              BlendMode.srcIn,
-            ),
-          ),
-          const SizedBox(width: 5),
-          Text(
-            '$label $sublabel',
-            style: const TextStyle(
-              color: AppColors.primary,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              fontFamily: 'InstrumentSans',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FavoriteMovieTile extends StatelessWidget {
-  final MovieEntity movie;
-
-  const _FavoriteMovieTile({required this.movie});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          movie.posterUrl.isNotEmpty
-              ? CachedNetworkImage(
-                  imageUrl: movie.posterUrl,
-                  fit: BoxFit.cover,
-                  placeholder: (_, __) => Container(color: AppColors.shimmer),
-                  errorWidget: (_, __, ___) => Container(
-                    color: AppColors.surfaceElevated,
-                    child: const Icon(Icons.movie_outlined,
-                        color: AppColors.textHint),
-                  ),
-                )
-              : Container(
-                  color: AppColors.surfaceElevated,
-                  child: const Icon(Icons.movie_outlined,
-                      color: AppColors.textHint),
-                ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: const BoxDecoration(
-                gradient: AppColors.cardGradient,
-              ),
-              child: Text(
-                movie.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,7 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/movie_entity.dart';
 
 /// Full-screen reel item: one movie per page (Reels-style).
-class MovieReelItem extends StatelessWidget {
+class MovieReelItem extends StatefulWidget {
   final MovieEntity movie;
   final VoidCallback onFavoriteToggle;
 
@@ -17,7 +19,25 @@ class MovieReelItem extends StatelessWidget {
   });
 
   @override
+  State<MovieReelItem> createState() => _MovieReelItemState();
+}
+
+class _MovieReelItemState extends State<MovieReelItem> {
+  bool _descriptionExpanded = false;
+
+  @override
+  void didUpdateWidget(MovieReelItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.movie.id != widget.movie.id) {
+      _descriptionExpanded = false;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final movie = widget.movie;
+    final onFavoriteToggle = widget.onFavoriteToggle;
+
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -40,9 +60,9 @@ class MovieReelItem extends StatelessWidget {
               Row(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(100),
                     child: Image.asset(
-                      AppAssets.images.appIcon,
+                      AppAssets.images.launcherIcon,
                       width: 32,
                       height: 32,
                       fit: BoxFit.cover,
@@ -71,8 +91,8 @@ class MovieReelItem extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   movie.description,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
+                  maxLines: _descriptionExpanded ? null : 2,
+                  overflow: _descriptionExpanded ? null : TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 14,
@@ -84,13 +104,18 @@ class MovieReelItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'Devamı Oku',
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'InstrumentSans',
+                GestureDetector(
+                  onTap: () {
+                    setState(() => _descriptionExpanded = !_descriptionExpanded);
+                  },
+                  child: Text(
+                    _descriptionExpanded ? 'Daha az' : 'Devamı Oku',
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'InstrumentSans',
+                    ),
                   ),
                 ),
               ],
@@ -102,21 +127,30 @@ class MovieReelItem extends StatelessWidget {
           bottom: 250,
           child: GestureDetector(
             onTap: onFavoriteToggle,
-            child: Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: SvgPicture.asset(
-                  movie.isFavorite ? AppAssets.icons.heartFill : AppAssets.icons.heart,
-                  width: 26,
-                  height: 26,
-                  colorFilter: ColorFilter.mode(
-                    movie.isFavorite ? AppColors.primary : Colors.white,
-                    BlendMode.srcIn,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(82),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                child: Container(
+                  width: 52,
+                  height: 72,
+                  decoration: BoxDecoration(
+                    color: AppColors.black.withValues(alpha: movie.isFavorite ? 0.2 : 0.05),
+                    borderRadius: BorderRadius.circular(82),
+                    border: Border.all(
+                        color: AppColors.white.withValues(alpha: movie.isFavorite ? 0.6 : 0.2),
+                        width: 1),
+                  ),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      movie.isFavorite ? AppAssets.icons.heartFill : AppAssets.icons.heart,
+                      width: 24,
+                      height: 24,
+                      colorFilter: ColorFilter.mode(
+                        movie.isFavorite ? AppColors.primary : Colors.white,
+                        BlendMode.srcIn,
+                      ),
+                    ),
                   ),
                 ),
               ),
