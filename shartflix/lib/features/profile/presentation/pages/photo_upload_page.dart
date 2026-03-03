@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
+import 'package:shartflix/core/constants/app_assets.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -73,37 +76,136 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
     final l10n = AppLocalizations.of(context);
     return BlocProvider(
       create: (_) => sl<ProfileBloc>(),
-      child: BlocListener<ProfileBloc, ProfileState>(
-        listener: (context, state) {
-          if (!_isUploading) return;
-          if (!state.isUploadingPhoto) {
-            setState(() => _isUploading = false);
-            if (!mounted) return;
-            if (state.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.errorMessage!),
-                  backgroundColor: AppColors.error,
-                ),
-              );
-            } else {
-              if (Navigator.canPop(context)) {
-                context.pop();
-              } else {
-                context.go(AppRoutes.home);
+      child: Builder(
+        builder: (ctx) {
+          return BlocListener<ProfileBloc, ProfileState>(
+            listener: (ctx, state) {
+              if (!_isUploading) return;
+              if (!state.isUploadingPhoto) {
+                setState(() => _isUploading = false);
+                if (!mounted) return;
+                if (state.errorMessage != null) {
+                  ScaffoldMessenger.of(ctx).showSnackBar(
+                    SnackBar(
+                      content: Text(state.errorMessage!),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+                } else {
+                  if (Navigator.canPop(ctx)) {
+                    ctx.pop();
+                  } else {
+                    ctx.go(AppRoutes.home);
+                  }
+                }
               }
-            }
-          }
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new,
-                  color: AppColors.textPrimary, size: 20),
-              onPressed: () => _onBack(context),
+            },
+            child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: AuthBackground(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SafeArea(bottom: false, child: _buildCustomAppBar(ctx, l10n)),
+                Expanded(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 52),
+                      SvgPicture.asset(
+                        AppAssets.images.photoUploadProfile,
+                        width: 76,
+                        height: 76,
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        l10n.uploadPhoto,
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'InstrumentSans',
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 48),
+                        child: Text(
+                          l10n.photoUploadSubtitle,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: AppColors.white90,
+                            fontSize: 14,
+                            height: 1.4,
+                            fontFamily: 'InstrumentSans',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 52),
+                      _buildPhotoArea(ctx),
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: AuthButton(
+                          label: l10n.continueButton,
+                          isLoading: _isUploading,
+                          onPressed: () => _onContinue(ctx),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextButton(
+                        onPressed: _isUploading ? null : () => _onSkip(ctx),
+                        child: Text(
+                          l10n.skipButton,
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'InstrumentSans',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            title: Text(
+          ),
+        ),
+            );
+        },
+      ),
+    );
+  }
+
+  Widget _buildCustomAppBar(BuildContext context, AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () => _onBack(context),
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              width: 44,
+              height: 44,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.inputBackground,
+                border: Border.all(color: AppColors.inputBorder),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: SvgPicture.asset(
+                AppAssets.icons.arrow,
+                width: 24,
+                height: 24,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
               l10n.profileDetail,
+              textAlign: TextAlign.center,
               style: const TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 18,
@@ -111,71 +213,9 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                 fontFamily: 'InstrumentSans',
               ),
             ),
-            centerTitle: true,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
           ),
-          body: AuthBackground(
-            child: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 24),
-                    const Icon(
-                      Icons.person_outline_rounded,
-                      size: 64,
-                      color: AppColors.textSecondary,
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      l10n.uploadPhoto,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'InstrumentSans',
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      l10n.photoUploadSubtitle,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 14,
-                        height: 1.4,
-                        fontFamily: 'InstrumentSans',
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    _buildPhotoArea(context),
-                    const SizedBox(height: 48),
-                    AuthButton(
-                      label: l10n.continueButton,
-                      isLoading: _isUploading,
-                      onPressed: () => _onContinue(context),
-                    ),
-                    const SizedBox(height: 16),
-                    TextButton(
-                      onPressed: _isUploading ? null : () => _onSkip(context),
-                      child: Text(
-                        l10n.skipButton,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'InstrumentSans',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+          const SizedBox(width: 48),
+        ],
       ),
     );
   }
@@ -183,23 +223,25 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
   Widget _buildPhotoArea(BuildContext context) {
     return GestureDetector(
       onTap: _selectedImage == null ? _pickImage : null,
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
+      child: Column(
         children: [
           Container(
-            width: 280,
-            height: 280,
+            width: 176,
+            height: 176,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: AppColors.inputBorder,
-                width: 2,
-                strokeAlign: BorderSide.strokeAlignInside,
-              ),
+              borderRadius: BorderRadius.circular(32),
+              border: _selectedImage != null
+                  ? null
+                  : DashedBorder.fromBorderSide(
+                      dashLength: 8,
+                      side: const BorderSide(
+                        color: AppColors.inputBorder,
+                        width: 2,
+                      ),
+                    ),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(32),
               child: _selectedImage != null
                   ? Stack(
                       fit: StackFit.expand,
@@ -210,82 +252,44 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                         ),
                       ],
                     )
-                  : CustomPaint(
-                      painter: _DashedBorderPainter(),
-                      child: const Center(
-                        child: Icon(
-                          Icons.add,
-                          size: 64,
-                          color: AppColors.textSecondary,
-                        ),
+                  : const Center(
+                      child: Icon(
+                        Icons.add,
+                        size: 32,
+                        color: AppColors.textSecondary,
                       ),
                     ),
             ),
           ),
-          if (_selectedImage != null)
-            Positioned(
-              bottom: -12,
-              child: GestureDetector(
-                onTap: _removeImage,
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.inputBorder),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.close,
-                    color: AppColors.textPrimary,
-                    size: 24,
-                  ),
+          const SizedBox(height: 12),
+          Opacity(
+            opacity: _selectedImage != null ? 1 : 0,
+            child: GestureDetector(
+              onTap: _removeImage,
+              child: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.white50),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.close,
+                  color: AppColors.textPrimary,
+                  size: 24,
                 ),
               ),
             ),
+          )
         ],
       ),
     );
   }
-}
-
-class _DashedBorderPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = AppColors.inputBorder
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
-    const dashWidth = 8;
-    const dashSpace = 6;
-
-    void drawDashedHorizontal(double y) {
-      for (double x = 0; x < size.width; x += dashWidth + dashSpace) {
-        final endX = (x + dashWidth).clamp(0.0, size.width);
-        if (endX > x) canvas.drawLine(Offset(x, y), Offset(endX, y), paint);
-      }
-    }
-
-    void drawDashedVertical(double x) {
-      for (double y = 0; y < size.height; y += dashWidth + dashSpace) {
-        final endY = (y + dashWidth).clamp(0.0, size.height);
-        if (endY > y) canvas.drawLine(Offset(x, y), Offset(x, endY), paint);
-      }
-    }
-
-    drawDashedHorizontal(0);
-    drawDashedHorizontal(size.height);
-    drawDashedVertical(0);
-    drawDashedVertical(size.width);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

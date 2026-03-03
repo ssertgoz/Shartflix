@@ -46,6 +46,9 @@ dependencies:
   # Expandable text
   see_more_text: ^1.1.1
 
+  # Dashed border
+  mobkit_dashed_border: ^0.0.8
+
   # Logging
   logger: ^2.5.0
 

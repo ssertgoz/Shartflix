@@ -41,6 +41,7 @@ class _Images {
 
   String get appIcon => 'assets/images/app_icon.png';
   String get launcherIcon => 'assets/images/luncher_icon.png';
+  String get photoUploadProfile => 'assets/images/photo_upload_profile.svg';
 }
 
 class _Animations {
