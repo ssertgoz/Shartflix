@@ -8,6 +8,9 @@ A Flutter case study for the **Flutter Developer** technical assessment. Shartfl
 
 The following demo shows the app flow: splash → login/register → home (reels) → profile → limited offer bottom sheet → settings (language switch, logout).
 
+https://github.com/user-attachments/assets/12077b10-0217-4066-a2a0-c5e5b39171eb
+
+
 
 ---
 
