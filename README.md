@@ -8,9 +8,6 @@ A Flutter case study for the **Flutter Developer** technical assessment. Shartfl
 
 The following demo shows the app flow: splash → login/register → home (reels) → profile → limited offer bottom sheet → settings (language switch, logout).
 
-<video src="video/Simulator Screen Recording - iPhone 17 Pro Max - 2026-03-04 at 12.12.14.mp4" controls width="50%"></video>
-
-*If the video does not play above, [open or download it from the `video/` folder](video/).*
 
 ---
 
