@@ -335,7 +335,7 @@ abstract class AppLocalizations {
   /// No description provided for @limitedOfferSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Special pricing for the first subscribers!'**
+  /// **'Choose your token package to earn bonuses and unlock new episodes!'**
   String get limitedOfferSubtitle;
 
   /// No description provided for @subscribeNow.

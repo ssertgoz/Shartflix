@@ -100,7 +100,7 @@ class LimitedOfferBottomSheet extends StatelessWidget {
           child: Text(
             l10n.limitedOfferSubtitle,
             style: const TextStyle(
-              color: AppColors.textSecondary,
+              color: AppColors.white90,
               fontSize: 14,
               height: 1.4,
               fontFamily: 'InstrumentSans',
@@ -136,8 +136,8 @@ class LimitedOfferBottomSheet extends StatelessWidget {
             l10n.bonusesYouGet,
             style: const TextStyle(
               color: AppColors.textPrimary,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
               fontFamily: 'InstrumentSans',
             ),
           ),
@@ -158,18 +158,18 @@ class LimitedOfferBottomSheet extends StatelessWidget {
 
   Widget _buildTokenSection(AppLocalizations l10n) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           l10n.selectTokenPackageToUnlock,
           style: const TextStyle(
             color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
             fontFamily: 'InstrumentSans',
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 32),
         Row(
           children: [
             Expanded(

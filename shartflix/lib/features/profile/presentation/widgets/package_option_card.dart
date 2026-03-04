@@ -237,27 +237,33 @@ class _PackageOptionBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor =
-        isPopular ? badgeColor.withValues(alpha: 0.7) : badgeColor.withValues(alpha: 0.6);
-
     return Positioned(
-      top: -8,
+      top: -12,
       left: 0,
       right: 0,
       child: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          child: Text(
-            badgeText,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'InstrumentSans',
+        child: IntrinsicWidth(
+          child: InnerShadowContainer(
+            height: 24,
+            borderRadius: 24,
+            backgroundColor: badgeColor,
+            blur: 4,
+            offset: const Offset(1, 1),
+            shadowColor: AppColors.white50,
+            isShadowTopLeft: true,
+            isShadowBottomRight: true,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: Center(
+                child: Text(
+                  badgeText,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontFamily: 'InstrumentSans',
+                  ),
+                ),
+              ),
             ),
           ),
         ),

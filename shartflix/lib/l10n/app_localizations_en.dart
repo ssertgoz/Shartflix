@@ -127,7 +127,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get limitedOfferSubtitle =>
-      'Special pricing for the first subscribers!';
+      'Choose your token package to earn bonuses and unlock new episodes!';
 
   @override
   String get subscribeNow => 'Subscribe Now';

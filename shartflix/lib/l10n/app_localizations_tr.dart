@@ -126,7 +126,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get myLikes => 'Beğendiklerim';
 
   @override
-  String get limitedOfferSubtitle => 'İlk aboneler için özel fiyatlandırma!';
+  String get limitedOfferSubtitle =>
+      'Jeton paketin\'ni seçerek bonus kazanın ve yeni bölümlerin kilidini açın!';
 
   @override
   String get subscribeNow => 'Üye Olmak İçin Tıklayınız';
