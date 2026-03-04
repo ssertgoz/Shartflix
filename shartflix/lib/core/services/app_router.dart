@@ -19,7 +19,10 @@ import '../theme/app_colors.dart';
 class AppRouter {
   AppRouter._();
 
-  static GoRouter get router => GoRouter(
+  /// Creates a single [GoRouter] instance. Call once from [main] and pass to
+  /// [MaterialApp.router] so hot reload keeps the current route instead of
+  /// re-initializing from splash.
+  static GoRouter createRouter() => GoRouter(
         navigatorKey: NavigationService.navigatorKey,
         initialLocation: AppRoutes.splash,
         redirect: _guardRedirect,

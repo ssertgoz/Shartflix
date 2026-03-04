@@ -43,11 +43,11 @@ class _Images {
   String get launcherIcon => 'assets/images/luncher_icon.png';
   String get photoUploadProfile => 'assets/images/photo_upload_profile.svg';
 
-  // Limited offer bonus items
-  String get limitedOfferPremium => 'assets/images/premium.svg';
-  String get limitedOfferHighlight => 'assets/images/highlight.svg';
-  String get limitedOfferMoreMatch => 'assets/images/more_match.svg';
-  String get limitedOfferMoreLike => 'assets/images/more_like.svg';
+  // Limited offer bonus items (PNG - SVGs contained embedded base64 images unsupported by flutter_svg)
+  String get limitedOfferPremium => 'assets/images/premium.png';
+  String get limitedOfferHighlight => 'assets/images/highlight.png';
+  String get limitedOfferMoreMatch => 'assets/images/more_match.png';
+  String get limitedOfferMoreLike => 'assets/images/more_like.png';
 }
 
 class _Animations {

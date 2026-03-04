@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/services/app_router.dart';
@@ -32,11 +33,14 @@ void main() async {
     // Firebase not configured yet — app works without it
   }
 
-  runApp(const ShartflixApp());
+  final goRouter = AppRouter.createRouter();
+  runApp(ShartflixApp(router: goRouter));
 }
 
 class ShartflixApp extends StatelessWidget {
-  const ShartflixApp({super.key});
+  const ShartflixApp({super.key, required this.router});
+
+  final GoRouter router;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,7 @@ class ShartflixApp extends StatelessWidget {
       title: 'Shartflix',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
-      routerConfig: AppRouter.router,
+      routerConfig: router,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

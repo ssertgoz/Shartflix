@@ -116,12 +116,20 @@ class LimitedOfferBottomSheet extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surfaceElevated.withValues(alpha: 0.6),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.white10),
+        gradient: RadialGradient(
+          center: const Alignment(0.09, 0), // 54.56% 50%
+          radius: 1,
+          colors: [
+            Color(0x1AFFFFFF), // rgba(255, 255, 255, 0.1)
+            Color(0x07FFFFFF), // rgba(255, 255, 255, 0.03)
+          ],
+          stops: const [0.0, 1.0],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.white20),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             l10n.bonusesYouGet,
@@ -134,12 +142,12 @@ class LimitedOfferBottomSheet extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              LimitedOfferBonusItem.premiumAccount(),
-              LimitedOfferBonusItem.moreMatches(),
-              LimitedOfferBonusItem.highlight(),
-              LimitedOfferBonusItem.moreLikes(),
+              Expanded(child: LimitedOfferBonusItem.premiumAccount()),
+              Expanded(child: LimitedOfferBonusItem.moreMatches()),
+              Expanded(child: LimitedOfferBonusItem.highlight()),
+              Expanded(child: LimitedOfferBonusItem.moreLikes()),
             ],
           ),
         ],
