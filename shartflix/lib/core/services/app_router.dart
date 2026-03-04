@@ -11,11 +11,12 @@ import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/photo_upload/pages/photo_upload_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../constants/app_assets.dart';
-import '../di/injection.dart';
-import 'secure_storage_service.dart';
-import 'navigation_service.dart';
 import '../constants/app_routes.dart';
+import '../di/injection.dart';
 import '../theme/app_colors.dart';
+import '../../l10n/app_localizations.dart';
+import 'navigation_service.dart';
+import 'secure_storage_service.dart';
 
 class AppRouter {
   AppRouter._();
@@ -128,6 +129,7 @@ class _MainShell extends StatelessWidget {
   }
 
   Widget _buildBottomNav(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isHome = _selectedIndex == 0;
     return SafeArea(
       top: false,
@@ -138,7 +140,7 @@ class _MainShell extends StatelessWidget {
             Expanded(
               child: _NavButton(
                 svgPath: isHome ? AppAssets.icons.homeFill : AppAssets.icons.home,
-                label: 'Anasayfa',
+                label: l10n.home,
                 isSelected: isHome,
                 onTap: () {
                   if (_selectedIndex != 0) {
@@ -151,7 +153,7 @@ class _MainShell extends StatelessWidget {
             Expanded(
               child: _NavButton(
                 svgPath: isHome ? AppAssets.icons.profile : AppAssets.icons.profileFill,
-                label: 'Profil',
+                label: l10n.profile,
                 isSelected: _selectedIndex == 1,
                 onTap: () {
                   if (_selectedIndex != 1) {
