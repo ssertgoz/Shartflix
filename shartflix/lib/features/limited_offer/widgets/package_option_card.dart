@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inner_shadow_container/inner_shadow_container.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_colors.dart';
 
 /// Package option card for the limited offer bottom sheet.
 /// Displays a selectable token package with gradient, badge, and pricing.
@@ -11,6 +11,8 @@ class PackageOptionCard extends StatelessWidget {
   final String newAmount;
   final String price;
   final bool isPopular;
+  final bool isSelected;
+  final VoidCallback? onTap;
 
   const PackageOptionCard({
     super.key,
@@ -20,28 +22,36 @@ class PackageOptionCard extends StatelessWidget {
     required this.newAmount,
     required this.price,
     this.isPopular = false,
+    this.isSelected = false,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      fit: StackFit.passthrough,
-      children: [
-        _PackageOptionCardShell(
-          isPopular: isPopular,
-          child: _PackageOptionTokenContent(
-            oldAmount: oldAmount,
-            newAmount: newAmount,
-            price: price,
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Stack(
+        clipBehavior: Clip.none,
+        fit: StackFit.passthrough,
+        children: [
+          _PackageOptionCardShell(
+            isPopular: isPopular,
+            isSelected: isSelected,
+            child: _PackageOptionTokenContent(
+              oldAmount: oldAmount,
+              newAmount: newAmount,
+              price: price,
+            ),
           ),
-        ),
-        _PackageOptionBadge(
-          badgeText: badgeText,
-          badgeColor: badgeColor,
-          isPopular: isPopular,
-        ),
-      ],
+          _PackageOptionBadge(
+            badgeText: badgeText,
+            badgeColor: badgeColor,
+            isPopular: isPopular,
+            isSelected: isSelected,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -49,10 +59,12 @@ class PackageOptionCard extends StatelessWidget {
 /// Card shell: gradient layers, frosted overlay, and inner shadow.
 class _PackageOptionCardShell extends StatelessWidget {
   final bool isPopular;
+  final bool isSelected;
   final Widget child;
 
   const _PackageOptionCardShell({
     required this.isPopular,
+    required this.isSelected,
     required this.child,
   });
 
@@ -91,14 +103,15 @@ class _PackageOptionCardShell extends StatelessWidget {
           ),
           Positioned.fill(
             child: Container(
-                decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: AppColors.white40,
-                width: 1,
-                strokeAlign: BorderSide.strokeAlignInside,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isSelected ? Colors.white : AppColors.white40,
+                  width: isSelected ? 2 : 1,
+                  strokeAlign: BorderSide.strokeAlignInside,
+                ),
               ),
-            )),
+            ),
           ),
         ],
       ),
@@ -229,11 +242,13 @@ class _PackageOptionBadge extends StatelessWidget {
   final String badgeText;
   final Color badgeColor;
   final bool isPopular;
+  final bool isSelected;
 
   const _PackageOptionBadge({
     required this.badgeText,
     required this.badgeColor,
     required this.isPopular,
+    required this.isSelected,
   });
 
   @override
@@ -244,24 +259,36 @@ class _PackageOptionBadge extends StatelessWidget {
       right: 0,
       child: Center(
         child: IntrinsicWidth(
-          child: InnerShadowContainer(
-            height: 24,
-            borderRadius: 24,
-            backgroundColor: badgeColor,
-            blur: 4,
-            offset: const Offset(1, 1),
-            shadowColor: AppColors.white50,
-            isShadowTopLeft: true,
-            isShadowBottomRight: true,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Center(
-                child: Text(
-                  badgeText,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontFamily: 'InstrumentSans',
+          child: Container(
+            decoration: isSelected
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 1,
+                      strokeAlign: BorderSide.strokeAlignOutside,
+                    ),
+                  )
+                : null,
+            child: InnerShadowContainer(
+              height: 24,
+              borderRadius: 24,
+              backgroundColor: badgeColor,
+              blur: 4,
+              offset: const Offset(1, 1),
+              shadowColor: AppColors.white50,
+              isShadowTopLeft: true,
+              isShadowBottomRight: true,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: Center(
+                  child: Text(
+                    badgeText,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontFamily: 'InstrumentSans',
+                    ),
                   ),
                 ),
               ),

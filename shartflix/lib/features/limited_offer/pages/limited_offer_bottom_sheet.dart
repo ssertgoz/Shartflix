@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/auth_background.dart';
-import '../../../../core/widgets/close_button_circle.dart';
-import '../../../auth/presentation/widgets/auth_button.dart';
-import 'limited_offer_bonus_item.dart';
-import 'package_option_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/auth_background.dart';
+import '../../../core/widgets/close_button_circle.dart';
+import '../../auth/presentation/widgets/auth_button.dart';
+import '../bloc/limited_offer_bloc.dart';
+import '../widgets/limited_offer_bonus_item.dart';
+import '../widgets/package_option_card.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 
 void showLimitedOfferBottomSheet(BuildContext context) {
@@ -14,7 +16,10 @@ void showLimitedOfferBottomSheet(BuildContext context) {
     useRootNavigator: true,
     barrierColor: AppColors.black.withValues(alpha: 0.8),
     backgroundColor: Colors.transparent,
-    builder: (_) => const LimitedOfferBottomSheet(),
+    builder: (_) => BlocProvider(
+      create: (_) => LimitedOfferBloc(initialSelectedIndex: 1),
+      child: const LimitedOfferBottomSheet(),
+    ),
   );
 }
 
@@ -61,7 +66,7 @@ class LimitedOfferBottomSheet extends StatelessWidget {
                         const SizedBox(height: 20),
                         _buildBonusesSection(l10n),
                         const SizedBox(height: 24),
-                        _buildTokenSection(l10n),
+                        _buildTokenSection(context, l10n),
                         const SizedBox(height: 24),
                         AuthButton(
                           label: l10n.seeAllTokens,
@@ -152,57 +157,67 @@ class LimitedOfferBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildTokenSection(AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          l10n.selectTokenPackageToUnlock,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'InstrumentSans',
-          ),
-        ),
-        const SizedBox(height: 32),
-        Row(
+  Widget _buildTokenSection(BuildContext context, AppLocalizations l10n) {
+    return BlocBuilder<LimitedOfferBloc, LimitedOfferState>(
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
-              child: PackageOptionCard(
-                badgeText: '+10%',
-                badgeColor: AppColors.primaryDark,
-                oldAmount: '200',
-                newAmount: '300',
-                price: '₺99,99',
-                isPopular: false,
+            Text(
+              l10n.selectTokenPackageToUnlock,
+              style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'InstrumentSans',
               ),
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: PackageOptionCard(
-                badgeText: '+70%',
-                badgeColor: const Color(0xFF5949E6),
-                oldAmount: '2.000',
-                newAmount: '3.375',
-                price: '₺799,99',
-                isPopular: true,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: PackageOptionCard(
-                badgeText: '+35%',
-                badgeColor: AppColors.primaryDark,
-                oldAmount: '1.000',
-                newAmount: '1.350',
-                price: '₺399,99',
-                isPopular: false,
-              ),
+            const SizedBox(height: 32),
+            Row(
+              children: [
+                Expanded(
+                  child: PackageOptionCard(
+                    badgeText: '+10%',
+                    badgeColor: AppColors.primaryDark,
+                    oldAmount: '200',
+                    newAmount: '300',
+                    price: '₺99,99',
+                    isPopular: false,
+                    isSelected: state.selectedPackageIndex == 0,
+                    onTap: () => context.read<LimitedOfferBloc>().add(const PackageSelected(0)),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: PackageOptionCard(
+                    badgeText: '+70%',
+                    badgeColor: const Color(0xFF5949E6),
+                    oldAmount: '2.000',
+                    newAmount: '3.375',
+                    price: '₺799,99',
+                    isPopular: true,
+                    isSelected: state.selectedPackageIndex == 1,
+                    onTap: () => context.read<LimitedOfferBloc>().add(const PackageSelected(1)),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: PackageOptionCard(
+                    badgeText: '+35%',
+                    badgeColor: AppColors.primaryDark,
+                    oldAmount: '1.000',
+                    newAmount: '1.350',
+                    price: '₺399,99',
+                    isPopular: false,
+                    isSelected: state.selectedPackageIndex == 2,
+                    onTap: () => context.read<LimitedOfferBloc>().add(const PackageSelected(2)),
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }

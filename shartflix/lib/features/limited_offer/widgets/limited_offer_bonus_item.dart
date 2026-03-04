@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inner_shadow_container/inner_shadow_container.dart';
-import '../../../../core/constants/app_assets.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../core/constants/app_assets.dart';
+import '../../../core/theme/app_colors.dart';
 
 /// Single bonus item for the limited offer bottom sheet: icon in circle + label.
 class LimitedOfferBonusItem extends StatelessWidget {

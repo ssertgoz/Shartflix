@@ -7,7 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../bloc/profile_bloc.dart';
 import '../widgets/favorites_section.dart';
-import '../widgets/limited_offer_bottom_sheet.dart';
+import '../../../limited_offer/pages/limited_offer_bottom_sheet.dart';
 import '../widgets/profile_app_bar.dart';
 import '../widgets/profile_header.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
