@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
@@ -42,11 +44,27 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   void _onPageChanged(int index, HomeState state) {
-    final bloc = context.read<HomeBloc>();
     if (index >= state.movies.length - 2 &&
         !state.hasReachedMax &&
         state.status != HomeStatus.loadingMore) {
-      bloc.add(FetchMovies(page: state.currentPage + 1));
+      context.read<HomeBloc>().add(FetchMovies(page: state.currentPage + 1));
+    }
+  }
+
+  Future<void> _onRefresh() async {
+    final bloc = context.read<HomeBloc>();
+    final completer = Completer<void>();
+    late StreamSubscription<HomeState> sub;
+    sub = bloc.stream.listen((state) {
+      if (state.status == HomeStatus.success || state.status == HomeStatus.failure) {
+        if (!completer.isCompleted) completer.complete();
+        sub.cancel();
+      }
+    });
+    bloc.add(const RefreshMovies());
+    await completer.future;
+    if (_pageController.hasClients) {
+      _pageController.jumpToPage(0);
     }
   }
 
@@ -87,38 +105,95 @@ class _HomeViewState extends State<_HomeView> {
             );
           }
 
-          final movieCount = state.movies.length;
-          final showLoader = !state.hasReachedMax && state.status == HomeStatus.loadingMore;
-          final itemCount = movieCount + (showLoader ? 1 : 0);
-
-          return PageView.builder(
-            controller: _pageController,
-            scrollDirection: Axis.vertical,
-            itemCount: itemCount,
-            onPageChanged: (index) => _onPageChanged(index, state),
-            itemBuilder: (context, index) {
-              if (index >= movieCount) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primary,
-                    strokeWidth: 2,
+          return Stack(
+            children: [
+              RefreshIndicator(
+                onRefresh: _onRefresh,
+                color: AppColors.primary,
+                backgroundColor: AppColors.surfaceElevated,
+                displacement: 60,
+                child: PageView.builder(
+                  controller: _pageController,
+                  scrollDirection: Axis.vertical,
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
                   ),
-                );
-              }
-              final movie = state.movies[index];
-              return SizedBox.expand(
-                child: MovieReelItem(
-                  key: ValueKey(movie.id),
-                  movie: movie,
-                  onFavoriteToggle: () {
-                    context.read<HomeBloc>().add(ToggleFavoriteMovie(movie.id));
-                    context.read<ProfileBloc>().add(const FetchProfile());
+                  itemCount: state.movies.length,
+                  onPageChanged: (index) => _onPageChanged(index, state),
+                  itemBuilder: (context, index) {
+                    final movie = state.movies[index];
+                    return SizedBox.expand(
+                      child: MovieReelItem(
+                        key: ValueKey(movie.id),
+                        movie: movie,
+                        onFavoriteToggle: () {
+                          context.read<HomeBloc>().add(ToggleFavoriteMovie(movie.id));
+                          context.read<ProfileBloc>().add(const FetchProfile());
+                        },
+                      ),
+                    );
                   },
                 ),
-              );
-            },
+              ),
+              // Background paging indicator — visible while next page loads
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: state.status == HomeStatus.loadingMore
+                    ? const Positioned(
+                        key: ValueKey('paging-loader'),
+                        bottom: 96,
+                        left: 0,
+                        right: 0,
+                        child: _PagingLoader(),
+                      )
+                    : const SizedBox.shrink(key: ValueKey('paging-hidden')),
+              ),
+            ],
           );
         },
+      ),
+    );
+  }
+}
+
+/// Floating pill shown at the bottom while loading the next page in background.
+class _PagingLoader extends StatelessWidget {
+  const _PagingLoader();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.black.withValues(alpha: 0.65),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.white20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              width: 14,
+              height: 14,
+              child: CircularProgressIndicator(
+                color: AppColors.primary,
+                strokeWidth: 1.5,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              l10n.loadingMovies,
+              style: const TextStyle(
+                color: AppColors.white80,
+                fontSize: 12,
+                fontFamily: 'InstrumentSans',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -141,7 +216,7 @@ class _ErrorView extends StatelessWidget {
             Container(
               width: 72,
               height: 72,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.surfaceElevated,
                 shape: BoxShape.circle,
               ),
