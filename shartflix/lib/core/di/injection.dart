@@ -21,6 +21,7 @@ import '../../features/profile/domain/repositories/profile_repository.dart';
 import '../../features/profile/domain/usecases/get_profile_usecase.dart';
 import '../../features/profile/domain/usecases/upload_photo_usecase.dart';
 import '../../features/profile/presentation/bloc/profile_bloc.dart';
+import '../../features/photo_upload/bloc/photo_upload_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -70,6 +71,7 @@ Future<void> configureDependencies() async {
   );
   sl.registerLazySingleton(() => GetProfileUseCase(sl()));
   sl.registerLazySingleton(() => UploadPhotoUseCase(sl()));
+  sl.registerFactory(() => PhotoUploadBloc(uploadPhoto: sl()));
   sl.registerFactory(() => ProfileBloc(
         getProfile: sl(),
         uploadPhoto: sl(),

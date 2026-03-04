@@ -8,7 +8,7 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
-import '../../features/profile/presentation/pages/photo_upload_page.dart';
+import '../../features/photo_upload/pages/photo_upload_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../constants/app_assets.dart';
 import '../di/injection.dart';
@@ -49,8 +49,7 @@ class AppRouter {
             builder: (_, __) => const SettingsPage(),
           ),
           StatefulShellRoute.indexedStack(
-            builder: (context, state, navigationShell) =>
-                BlocProvider<ProfileBloc>(
+            builder: (context, state, navigationShell) => BlocProvider<ProfileBloc>(
               create: (_) => sl<ProfileBloc>(),
               child: _MainShell(
                 navigationShell: navigationShell,
