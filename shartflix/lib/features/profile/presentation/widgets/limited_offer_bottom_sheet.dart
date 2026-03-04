@@ -12,6 +12,7 @@ void showLimitedOfferBottomSheet(BuildContext context) {
     context: context,
     isScrollControlled: true,
     useRootNavigator: true,
+    barrierColor: AppColors.black.withValues(alpha: 0.8),
     backgroundColor: Colors.transparent,
     builder: (_) => const LimitedOfferBottomSheet(),
   );
@@ -24,9 +25,9 @@ class LimitedOfferBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
+      height: MediaQuery.of(context).size.height * 0.85,
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       clipBehavior: Clip.antiAlias,
       child: AuthBackground(
@@ -34,55 +35,49 @@ class LimitedOfferBottomSheet extends StatelessWidget {
         child: SafeArea(
           top: false,
           child: Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom + 32,
-              top: 8,
-              left: 20,
-              right: 20,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildHandleAndClose(context),
-                  const SizedBox(height: 16),
-                  _buildHeader(context, l10n),
-                  const SizedBox(height: 24),
-                  _buildBonusesSection(l10n),
-                  const SizedBox(height: 24),
-                  _buildTokenSection(l10n),
-                  const SizedBox(height: 24),
-                  AuthButton(
-                    label: l10n.seeAllTokens,
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
+              padding: EdgeInsets.only(
+                top: 16,
+                left: 16,
+                right: 16,
               ),
-            ),
-          ),
+              child: Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CloseButtonCircle(
+                        onPressed: () => Navigator.pop(context),
+                        size: 40,
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 16),
+                        _buildTitleSection(l10n),
+                        const SizedBox(height: 20),
+                        _buildBonusesSection(l10n),
+                        const SizedBox(height: 24),
+                        _buildTokenSection(l10n),
+                        const SizedBox(height: 24),
+                        AuthButton(
+                          label: l10n.seeAllTokens,
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )),
         ),
       ),
     );
   }
 
-  Widget _buildHandleAndClose(BuildContext context) {
-    return Row(
-      children: [
-        const Expanded(child: SizedBox()),
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: CloseButtonCircle(
-              onPressed: () => Navigator.pop(context),
-              size: 40,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
+  Widget _buildTitleSection(AppLocalizations l10n) {
     return Column(
       children: [
         Text(
@@ -93,6 +88,7 @@ class LimitedOfferBottomSheet extends StatelessWidget {
             fontWeight: FontWeight.w800,
             fontFamily: 'InstrumentSans',
           ),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         Padding(
