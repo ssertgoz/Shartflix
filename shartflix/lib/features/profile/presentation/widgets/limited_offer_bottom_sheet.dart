@@ -4,7 +4,7 @@ import '../../../../core/widgets/auth_background.dart';
 import '../../../../core/widgets/close_button_circle.dart';
 import '../../../auth/presentation/widgets/auth_button.dart';
 import 'limited_offer_bonus_item.dart';
-import 'limited_offer_token_card.dart';
+import 'package_option_card.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 
 void showLimitedOfferBottomSheet(BuildContext context) {
@@ -30,6 +30,7 @@ class LimitedOfferBottomSheet extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: AuthBackground(
+        showBottomGradient: true,
         child: SafeArea(
           top: false,
           child: Padding(
@@ -172,35 +173,35 @@ class LimitedOfferBottomSheet extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: LimitedOfferTokenCard(
+              child: PackageOptionCard(
                 badgeText: '+10%',
                 badgeColor: AppColors.primaryDark,
                 oldAmount: '200',
                 newAmount: '300',
                 price: '₺99,99',
-                isHighlighted: false,
+                isPopular: false,
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: LimitedOfferTokenCard(
+              child: PackageOptionCard(
                 badgeText: '+70%',
-                badgeColor: const Color(0xFF3D2B99),
+                badgeColor: const Color(0xFF5949E6),
                 oldAmount: '2.000',
                 newAmount: '3.375',
                 price: '₺799,99',
-                isHighlighted: true,
+                isPopular: true,
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: LimitedOfferTokenCard(
+              child: PackageOptionCard(
                 badgeText: '+35%',
                 badgeColor: AppColors.primaryDark,
                 oldAmount: '1.000',
                 newAmount: '1.350',
                 price: '₺399,99',
-                isHighlighted: false,
+                isPopular: false,
               ),
             ),
           ],

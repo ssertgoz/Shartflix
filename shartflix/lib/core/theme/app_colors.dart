@@ -130,9 +130,33 @@ class AppColors {
     stops: [0.0, 0.5],
   );
 
+  /// Auth background: bottom radial glow (for limited offer etc.)
+  static const RadialGradient authBackgroundBottomRadial = RadialGradient(
+    center: Alignment(0, 1),
+    radius: 1,
+    colors: [Color.fromARGB(65, 229, 9, 20), Color(0x00000000)],
+    stops: [0.0, 0.7],
+  );
+
   static const LinearGradient headerGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [Color(0xFF0A0A0A), Color(0x000A0A0A)],
+  );
+
+  /// Limited offer - normal token card: radial 144.56% 76.1% at 26.44% 15.22%, #6F060B → #E50914
+  static const RadialGradient tokenCardNormalGradient = RadialGradient(
+    center: Alignment(-0.47, -0.70), // 26.44% 15.22%
+    radius: 1,
+    colors: [Color(0xFF6F060B), Color(0xFFE50914)],
+    stops: [0.0, 1.0],
+  );
+
+  /// Limited offer - popular token card: radial 144.56% 76.1% at 26.44% 15.22%, #5949E6 → #E50914
+  static const RadialGradient tokenCardPopularGradient = RadialGradient(
+    center: Alignment(-0.47, -0.70), // 26.44% 15.22%
+    radius: 1,
+    colors: [Color(0xFF5949E6), Color(0xFFE50914)],
+    stops: [0.0, 1.0],
   );
 }
