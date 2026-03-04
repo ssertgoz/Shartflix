@@ -81,8 +81,8 @@ class _PackageOptionCardShell extends StatelessWidget {
             isShadowBottomRight: true,
             child: Padding(
               padding: const EdgeInsets.only(
-                top: 20,
-                bottom: 14,
+                top: 32,
+                bottom: 12,
                 left: 12,
                 right: 12,
               ),
@@ -161,14 +161,15 @@ class _PackageOptionTokenContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (oldAmount.isNotEmpty)
           Text(
             oldAmount,
             style: TextStyle(
-              color: AppColors.white60,
-              fontSize: 12,
+              color: AppColors.white90,
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
               decoration: TextDecoration.lineThrough,
               fontFamily: 'InstrumentSans',
             ),
@@ -177,32 +178,33 @@ class _PackageOptionTokenContent extends StatelessWidget {
           newAmount,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 22,
-            fontWeight: FontWeight.w800,
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            height: 1.2,
             fontFamily: 'InstrumentSans',
           ),
         ),
-        const SizedBox(height: 2),
         Text(
           'Jeton',
           style: TextStyle(
             color: AppColors.white.withValues(alpha: 0.9),
-            fontSize: 12,
+            fontSize: 14,
             fontFamily: 'InstrumentSans',
+            fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 16),
         Divider(
           height: 1,
           thickness: 1,
-          color: AppColors.white.withValues(alpha: 0.3),
+          color: AppColors.white10,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 14),
         Text(
           price,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 14,
+            fontSize: 16,
             fontWeight: FontWeight.w700,
             fontFamily: 'InstrumentSans',
           ),
@@ -210,8 +212,9 @@ class _PackageOptionTokenContent extends StatelessWidget {
         Text(
           'Başına haftalık',
           style: TextStyle(
-            color: AppColors.white.withValues(alpha: 0.8),
-            fontSize: 11,
+            color: AppColors.white80,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
             fontFamily: 'InstrumentSans',
           ),
         ),
