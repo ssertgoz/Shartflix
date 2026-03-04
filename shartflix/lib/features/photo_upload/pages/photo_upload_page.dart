@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:shartflix/core/constants/app_assets.dart';
 import '../../../core/constants/app_routes.dart';
 import '../../../core/di/injection.dart';
+import '../../../core/services/navigation_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/auth_background.dart';
 import '../../../core/widgets/close_button_circle.dart';
@@ -31,11 +31,11 @@ class PhotoUploadPage extends StatelessWidget {
 class _PhotoUploadView extends StatelessWidget {
   const _PhotoUploadView();
 
-  void _navigateBack(BuildContext context) {
-    if (Navigator.canPop(context)) {
-      context.pop();
+  void _navigateBack() {
+    if (NavigationService.canPop()) {
+      NavigationService.pop();
     } else {
-      context.go(AppRoutes.home);
+      NavigationService.go(AppRoutes.home);
     }
   }
 
@@ -58,7 +58,7 @@ class _PhotoUploadView extends StatelessWidget {
     return BlocListener<PhotoUploadBloc, PhotoUploadState>(
       listener: (context, state) {
         if (state.uploadSuccess) {
-          _navigateBack(context);
+          _navigateBack();
           return;
         }
         if (state.errorMessage != null) {
@@ -131,7 +131,7 @@ class _PhotoUploadView extends StatelessWidget {
                     const SizedBox(height: 12),
                     BlocBuilder<PhotoUploadBloc, PhotoUploadState>(
                       builder: (context, state) => TextButton(
-                        onPressed: state.isUploading ? null : () => _navigateBack(context),
+                        onPressed: state.isUploading ? null : () => _navigateBack(),
                         child: Text(
                           l10n.skipButton,
                           style: const TextStyle(
@@ -158,7 +158,7 @@ class _PhotoUploadView extends StatelessWidget {
     if (state.selectedImage != null) {
       context.read<PhotoUploadBloc>().add(const PhotoUploadSubmitted());
     } else {
-      _navigateBack(context);
+      _navigateBack();
     }
   }
 
@@ -168,7 +168,7 @@ class _PhotoUploadView extends StatelessWidget {
       child: Row(
         children: [
           InkWell(
-            onTap: () => _navigateBack(context),
+            onTap: () => _navigateBack(),
             borderRadius: BorderRadius.circular(16),
             child: Container(
               width: 44,

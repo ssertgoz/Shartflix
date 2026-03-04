@@ -11,8 +11,9 @@ class NavigationService {
     navigatorKey.currentContext?.go(route, extra: extra);
   }
 
-  static void push(String route, {Object? extra}) {
-    navigatorKey.currentContext?.push(route, extra: extra);
+  static Future<T?> push<T>(String route, {Object? extra}) {
+    return navigatorKey.currentContext?.push<T>(route, extra: extra) ??
+        Future.value(null);
   }
 
   static void pop([Object? result]) {

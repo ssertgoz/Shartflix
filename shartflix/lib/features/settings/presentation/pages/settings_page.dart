@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/services/locale_notifier.dart';
+import '../../../../core/services/navigation_service.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 
@@ -18,7 +18,7 @@ class SettingsPage extends StatelessWidget {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoggedOut) {
-            context.go(AppRoutes.login);
+            NavigationService.go(AppRoutes.login);
           }
         },
         child: const _SettingsView(),
@@ -77,7 +77,7 @@ class _SettingsView extends StatelessWidget {
               color: AppColors.textPrimary,
               size: 20,
             ),
-            onPressed: () => context.pop(),
+            onPressed: () => NavigationService.pop(),
           ),
           const SizedBox(width: 4),
           Text(

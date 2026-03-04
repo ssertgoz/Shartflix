@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/services/navigation_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/auth_background.dart';
 import '../../../core/widgets/close_button_circle.dart';
@@ -51,7 +52,7 @@ class LimitedOfferBottomSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       CloseButtonCircle(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => NavigationService.pop(),
                         size: 40,
                       ),
                     ],
@@ -70,7 +71,7 @@ class LimitedOfferBottomSheet extends StatelessWidget {
                         const SizedBox(height: 24),
                         AuthButton(
                           label: l10n.seeAllTokens,
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => NavigationService.pop(),
                         ),
                       ],
                     ),

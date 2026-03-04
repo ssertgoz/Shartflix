@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_routes.dart';
+import '../../../../core/services/navigation_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 
@@ -119,7 +119,7 @@ class _ProfileAppBarContent extends StatelessWidget {
                 color: AppColors.textSecondary,
                 size: 22,
               ),
-              onPressed: () => context.push(AppRoutes.settings),
+              onPressed: () => NavigationService.push(AppRoutes.settings),
             ),
           ],
         ),

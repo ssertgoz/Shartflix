@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_routes.dart';
+import '../../../../core/services/navigation_service.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/auth_background.dart';
@@ -85,7 +85,7 @@ class _RegisterViewState extends State<_RegisterView> {
               backgroundColor: AppColors.success,
             ),
           );
-          context.go(AppRoutes.photoUpload);
+          NavigationService.go(AppRoutes.photoUpload);
         } else if (state is AuthFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -189,7 +189,7 @@ class _RegisterViewState extends State<_RegisterView> {
                   AuthLinkPrompt(
                     promptText: '${l10n.hasAccountPrompt} ',
                     linkText: l10n.loginLinkText,
-                    onLinkTap: () => context.go(AppRoutes.login),
+                    onLinkTap: () => NavigationService.go(AppRoutes.login),
                   ),
                   const SizedBox(height: 24),
                 ],

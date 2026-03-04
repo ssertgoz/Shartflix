@@ -142,7 +142,7 @@ class _MainShell extends StatelessWidget {
                 isSelected: isHome,
                 onTap: () {
                   if (_selectedIndex != 0) {
-                    context.go(AppRoutes.home);
+                    NavigationService.go(AppRoutes.home);
                   }
                 },
               ),
@@ -155,7 +155,7 @@ class _MainShell extends StatelessWidget {
                 isSelected: _selectedIndex == 1,
                 onTap: () {
                   if (_selectedIndex != 1) {
-                    context.go(AppRoutes.profile);
+                    NavigationService.go(AppRoutes.profile);
                   }
                 },
               ),

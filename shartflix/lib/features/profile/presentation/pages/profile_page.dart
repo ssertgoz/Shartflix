@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
+import '../../../../core/services/navigation_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../bloc/profile_bloc.dart';
@@ -59,7 +60,7 @@ class _ProfileView extends StatelessWidget {
   const _ProfileView();
 
   Future<void> _navigateToPhotoUpload(BuildContext context) async {
-    await context.push(AppRoutes.photoUpload);
+    await NavigationService.push(AppRoutes.photoUpload);
     if (context.mounted) {
       context.read<ProfileBloc>().add(const FetchProfile());
     }
@@ -71,7 +72,7 @@ class _ProfileView extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoggedOut) {
-          context.go(AppRoutes.login);
+          NavigationService.go(AppRoutes.login);
         }
       },
       child: Scaffold(

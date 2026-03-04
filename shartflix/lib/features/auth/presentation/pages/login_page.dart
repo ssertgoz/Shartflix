@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_routes.dart';
+import '../../../../core/services/navigation_service.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/auth_background.dart';
@@ -86,7 +86,7 @@ class _LoginViewState extends State<_LoginView> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          context.go(AppRoutes.home);
+          NavigationService.go(AppRoutes.home);
         } else if (state is AuthFailure) {
           setState(() {
             _loginErrorMessage = _loginErrorForDisplay(state, l10n);
@@ -194,7 +194,7 @@ class _LoginViewState extends State<_LoginView> {
                   AuthLinkPrompt(
                     promptText: '${l10n.noAccountPrompt} ',
                     linkText: l10n.registerLinkText,
-                    onLinkTap: () => context.go(AppRoutes.register),
+                    onLinkTap: () => NavigationService.go(AppRoutes.register),
                   ),
                 ],
               ),

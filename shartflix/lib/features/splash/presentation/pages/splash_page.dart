@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/services/firebase_service.dart';
+import '../../../../core/services/navigation_service.dart';
 import '../../../../core/services/secure_storage_service.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -53,9 +53,9 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
 
     if (!mounted) return;
     if (hasToken) {
-      context.go(AppRoutes.home);
+      NavigationService.go(AppRoutes.home);
     } else {
-      context.go(AppRoutes.login);
+      NavigationService.go(AppRoutes.login);
     }
   }
 
