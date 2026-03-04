@@ -270,4 +270,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get seeLess => 'See Less';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get turkish => 'Türkçe';
+
+  @override
+  String get english => 'English';
 }

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/services/app_router.dart';
+import 'core/services/locale_notifier.dart';
 import 'core/services/firebase_service.dart';
 import 'core/theme/app_theme.dart';
 
@@ -24,6 +25,7 @@ void main() async {
   ]);
 
   await configureDependencies();
+  await sl<LocaleNotifier>().initialize();
 
   // Initialize Firebase (requires google-services.json / GoogleService-Info.plist)
   try {
@@ -44,21 +46,25 @@ class ShartflixApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Shartflix',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
-      routerConfig: router,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('tr'),
-      ],
+    return ValueListenableBuilder<Locale>(
+      valueListenable: sl<LocaleNotifier>(),
+      builder: (context, locale, _) => MaterialApp.router(
+        title: 'Shartflix',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.darkTheme,
+        routerConfig: router,
+        locale: locale,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('tr'),
+        ],
+      ),
     );
   }
 }

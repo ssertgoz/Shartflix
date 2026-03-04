@@ -271,4 +271,16 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get seeLess => 'Daha az';
+
+  @override
+  String get settings => 'Ayarlar';
+
+  @override
+  String get language => 'Dil';
+
+  @override
+  String get turkish => 'Türkçe';
+
+  @override
+  String get english => 'English';
 }

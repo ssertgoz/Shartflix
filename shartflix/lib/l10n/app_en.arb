@@ -86,5 +86,9 @@
   "movie": "Movie",
   "connectionError": "Connection error",
   "seeMore": "See More",
-  "seeLess": "See Less"
+  "seeLess": "See Less",
+  "settings": "Settings",
+  "language": "Language",
+  "turkish": "Türkçe",
+  "english": "English"
 }

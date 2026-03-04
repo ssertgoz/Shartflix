@@ -86,5 +86,9 @@
   "movie": "Film",
   "connectionError": "Bağlantı hatası",
   "seeMore": "Devamı Oku",
-  "seeLess": "Daha az"
+  "seeLess": "Daha az",
+  "settings": "Ayarlar",
+  "language": "Dil",
+  "turkish": "Türkçe",
+  "english": "English"
 }

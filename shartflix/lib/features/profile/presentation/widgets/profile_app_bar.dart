@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_assets.dart';
+import '../../../../core/constants/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../auth/presentation/bloc/auth_bloc.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
 
 class ProfileAppBar extends StatelessWidget {
@@ -114,34 +114,12 @@ class _ProfileAppBarContent extends StatelessWidget {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.logout_rounded, color: AppColors.textSecondary, size: 22),
-              onPressed: () {
-                final authBloc = context.read<AuthBloc>();
-                showDialog(
-                  context: context,
-                  builder: (dialogContext) => AlertDialog(
-                    backgroundColor: AppColors.surfaceElevated,
-                    title: Text(l10n.logoutConfirmTitle, style: const TextStyle(color: AppColors.textPrimary)),
-                    content: Text(
-                      l10n.logoutConfirmMessage,
-                      style: const TextStyle(color: AppColors.textSecondary),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(dialogContext),
-                        child: Text(l10n.cancel, style: const TextStyle(color: AppColors.textSecondary)),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(dialogContext);
-                          authBloc.add(const LogoutRequested());
-                        },
-                        child: Text(l10n.logout, style: const TextStyle(color: AppColors.primary)),
-                      ),
-                    ],
-                  ),
-                );
-              },
+              icon: const Icon(
+                Icons.settings_rounded,
+                color: AppColors.textSecondary,
+                size: 22,
+              ),
+              onPressed: () => context.push(AppRoutes.settings),
             ),
           ],
         ),

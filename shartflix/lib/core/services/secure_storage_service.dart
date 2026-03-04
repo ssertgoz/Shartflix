@@ -4,6 +4,7 @@ import 'logger_service.dart';
 class SecureStorageService {
   static const _tokenKey = 'auth_token';
   static const _userIdKey = 'user_id';
+  static const _localeKey = 'app_locale';
 
   final FlutterSecureStorage _storage;
 
@@ -69,5 +70,22 @@ class SecureStorageService {
   Future<bool> hasToken() async {
     final token = await getToken();
     return token != null && token.isNotEmpty;
+  }
+
+  Future<void> saveLocale(String languageCode) async {
+    try {
+      await _storage.write(key: _localeKey, value: languageCode);
+    } catch (e) {
+      logger.error('Failed to save locale', e);
+    }
+  }
+
+  Future<String?> getSavedLocale() async {
+    try {
+      return await _storage.read(key: _localeKey);
+    } catch (e) {
+      logger.error('Failed to read locale', e);
+      return null;
+    }
   }
 }

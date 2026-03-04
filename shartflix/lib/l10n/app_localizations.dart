@@ -619,6 +619,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See Less'**
   String get seeLess;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @turkish.
+  ///
+  /// In en, this message translates to:
+  /// **'Türkçe'**
+  String get turkish;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
 }
 
 class _AppLocalizationsDelegate

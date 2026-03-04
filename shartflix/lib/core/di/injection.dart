@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import '../network/api_client.dart';
 import '../services/secure_storage_service.dart';
+import '../services/locale_notifier.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
@@ -26,6 +27,7 @@ final sl = GetIt.instance;
 Future<void> configureDependencies() async {
   // Services
   sl.registerLazySingleton<SecureStorageService>(() => SecureStorageService());
+  sl.registerLazySingleton<LocaleNotifier>(() => LocaleNotifier(sl()));
   sl.registerLazySingleton<ApiClient>(() => ApiClient(sl()));
 
   // Auth
