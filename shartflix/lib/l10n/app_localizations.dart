@@ -374,6 +374,30 @@ abstract class AppLocalizations {
   /// **'Per week'**
   String get perWeek;
 
+  /// No description provided for @bonusPremiumAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Account'**
+  String get bonusPremiumAccount;
+
+  /// No description provided for @bonusMoreMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'More Matches'**
+  String get bonusMoreMatches;
+
+  /// No description provided for @bonusHighlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Highlight'**
+  String get bonusHighlight;
+
+  /// No description provided for @bonusMoreLikes.
+  ///
+  /// In en, this message translates to:
+  /// **'More Likes'**
+  String get bonusMoreLikes;
+
   /// No description provided for @top.
   ///
   /// In en, this message translates to:
@@ -517,6 +541,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Skip'**
   String get skipButton;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with your account details'**
+  String get loginSubtitle;
+
+  /// No description provided for @registerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Register with your account details'**
+  String get registerSubtitle;
+
+  /// No description provided for @noAccountPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account?'**
+  String get noAccountPrompt;
+
+  /// No description provided for @registerLinkText.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get registerLinkText;
+
+  /// No description provided for @hasAccountPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get hasAccountPrompt;
+
+  /// No description provided for @loginLinkText.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in.'**
+  String get loginLinkText;
+
+  /// No description provided for @logoutConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out'**
+  String get logoutConfirmTitle;
+
+  /// No description provided for @logoutConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get logoutConfirmMessage;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @movie.
+  ///
+  /// In en, this message translates to:
+  /// **'Movie'**
+  String get movie;
+
+  /// No description provided for @connectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection error'**
+  String get connectionError;
+
+  /// No description provided for @seeMore.
+  ///
+  /// In en, this message translates to:
+  /// **'See More'**
+  String get seeMore;
+
+  /// No description provided for @seeLess.
+  ///
+  /// In en, this message translates to:
+  /// **'See Less'**
+  String get seeLess;
 }
 
 class _AppLocalizationsDelegate

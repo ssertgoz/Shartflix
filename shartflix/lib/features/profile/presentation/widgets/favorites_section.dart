@@ -26,7 +26,7 @@ class FavoritesSection extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 24),
             child: Text(
-              'Beğendiklerim',
+              l10n.myLikes,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w700,

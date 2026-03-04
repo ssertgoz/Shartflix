@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inner_shadow_container/inner_shadow_container.dart';
 import '../../../core/constants/app_assets.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:shartflix/l10n/app_localizations.dart';
 
 /// Single bonus item for the limited offer bottom sheet: icon in circle + label.
 class LimitedOfferBonusItem extends StatelessWidget {
@@ -14,28 +15,28 @@ class LimitedOfferBonusItem extends StatelessWidget {
     required this.label,
   });
 
-  /// Premium account
-  factory LimitedOfferBonusItem.premiumAccount() => LimitedOfferBonusItem(
+  factory LimitedOfferBonusItem.premiumAccount(AppLocalizations l10n) =>
+      LimitedOfferBonusItem(
         assetPath: AppAssets.images.limitedOfferPremium,
-        label: 'Premium Hesap',
+        label: l10n.bonusPremiumAccount,
       );
 
-  /// More matches
-  factory LimitedOfferBonusItem.moreMatches() => LimitedOfferBonusItem(
+  factory LimitedOfferBonusItem.moreMatches(AppLocalizations l10n) =>
+      LimitedOfferBonusItem(
         assetPath: AppAssets.images.limitedOfferMoreMatch,
-        label: 'Daha Fazla Eşleşme',
+        label: l10n.bonusMoreMatches,
       );
 
-  /// Highlight / promotion
-  factory LimitedOfferBonusItem.highlight() => LimitedOfferBonusItem(
+  factory LimitedOfferBonusItem.highlight(AppLocalizations l10n) =>
+      LimitedOfferBonusItem(
         assetPath: AppAssets.images.limitedOfferHighlight,
-        label: 'Öne Çıkarma',
+        label: l10n.bonusHighlight,
       );
 
-  /// More likes
-  factory LimitedOfferBonusItem.moreLikes() => LimitedOfferBonusItem(
+  factory LimitedOfferBonusItem.moreLikes(AppLocalizations l10n) =>
+      LimitedOfferBonusItem(
         assetPath: AppAssets.images.limitedOfferMoreLike,
-        label: 'Daha Fazla Beğeni',
+        label: l10n.bonusMoreLikes,
       );
 
   @override

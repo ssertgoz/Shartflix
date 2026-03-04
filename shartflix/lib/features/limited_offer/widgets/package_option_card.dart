@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inner_shadow_container/inner_shadow_container.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:shartflix/l10n/app_localizations.dart';
 
 /// Package option card for the limited offer bottom sheet.
 /// Displays a selectable token package with gradient, badge, and pricing.
@@ -198,7 +199,7 @@ class _PackageOptionTokenContent extends StatelessWidget {
           ),
         ),
         Text(
-          'Jeton',
+          AppLocalizations.of(context).token,
           style: TextStyle(
             color: AppColors.white.withValues(alpha: 0.9),
             fontSize: 14,
@@ -223,7 +224,7 @@ class _PackageOptionTokenContent extends StatelessWidget {
           ),
         ),
         Text(
-          'Başına haftalık',
+          AppLocalizations.of(context).perWeek,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: AppColors.white80,

@@ -148,6 +148,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get perWeek => 'Per week';
 
   @override
+  String get bonusPremiumAccount => 'Premium Account';
+
+  @override
+  String get bonusMoreMatches => 'More Matches';
+
+  @override
+  String get bonusHighlight => 'Highlight';
+
+  @override
+  String get bonusMoreLikes => 'More Likes';
+
+  @override
   String get top => 'TOP';
 
   @override
@@ -219,4 +231,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get skipButton => 'Skip';
+
+  @override
+  String get loginSubtitle => 'Sign in with your account details';
+
+  @override
+  String get registerSubtitle => 'Register with your account details';
+
+  @override
+  String get noAccountPrompt => 'Don\'t have an account?';
+
+  @override
+  String get registerLinkText => 'Sign Up';
+
+  @override
+  String get hasAccountPrompt => 'Already have an account?';
+
+  @override
+  String get loginLinkText => 'Sign in.';
+
+  @override
+  String get logoutConfirmTitle => 'Log Out';
+
+  @override
+  String get logoutConfirmMessage => 'Are you sure you want to log out?';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get movie => 'Movie';
+
+  @override
+  String get connectionError => 'Connection error';
+
+  @override
+  String get seeMore => 'See More';
+
+  @override
+  String get seeLess => 'See Less';
 }

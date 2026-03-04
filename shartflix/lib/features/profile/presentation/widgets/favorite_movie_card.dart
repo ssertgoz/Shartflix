@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../home/domain/entities/movie_entity.dart';
 import 'profile_card_poster.dart';
+import 'package:shartflix/l10n/app_localizations.dart';
 
 class FavoriteMovieCard extends StatelessWidget {
   final MovieEntity movie;
@@ -52,9 +53,9 @@ class FavoriteMovieCard extends StatelessWidget {
                       fontFamily: 'InstrumentSans',
                     ),
                   ),
-                  const Text(
-                    'Film',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context).movie,
+                    style: const TextStyle(
                       color: AppColors.white50,
                       fontWeight: FontWeight.w400,
                       fontSize: 14,

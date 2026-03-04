@@ -8,6 +8,7 @@ import 'package:see_more_text/see_more_text.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/movie_entity.dart';
+import 'package:shartflix/l10n/app_localizations.dart';
 
 /// Full-screen reel item: one movie per page (Reels-style).
 class MovieReelItem extends StatefulWidget {
@@ -94,8 +95,8 @@ class _MovieReelItemState extends State<MovieReelItem> {
                           animationDuration: const Duration(milliseconds: 300),
                           text: movie.description,
                           maxLines: 2,
-                          seeMoreText: ' Devamı Oku',
-                          seeLessText: ' Daha az',
+                          seeMoreText: ' ${AppLocalizations.of(context).seeMore}',
+                          seeLessText: ' ${AppLocalizations.of(context).seeLess}',
                           textStyle: const TextStyle(
                             color: AppColors.white80,
                             fontSize: 14,

@@ -153,7 +153,7 @@ class _ErrorView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'Bağlantı hatası',
+              AppLocalizations.of(context).connectionError,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),

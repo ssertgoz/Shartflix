@@ -118,7 +118,7 @@ class _LoginViewState extends State<_LoginView> {
                   const SizedBox(height: 32),
                   AuthHeader(
                     title: l10n.login,
-                    subtitle: 'Kullanıcı bilgilerinle giriş yap',
+                    subtitle: l10n.loginSubtitle,
                   ),
                   const SizedBox(height: 36),
                   Form(
@@ -192,8 +192,8 @@ class _LoginViewState extends State<_LoginView> {
                   const AuthSocialButtons(),
                   const SizedBox(height: 24),
                   AuthLinkPrompt(
-                    promptText: 'Bir hesabın yok mu? ',
-                    linkText: 'Kayıt Ol',
+                    promptText: '${l10n.noAccountPrompt} ',
+                    linkText: l10n.registerLinkText,
                     onLinkTap: () => context.go(AppRoutes.register),
                   ),
                 ],

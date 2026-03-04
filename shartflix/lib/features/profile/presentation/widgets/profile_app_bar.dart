@@ -121,16 +121,15 @@ class _ProfileAppBarContent extends StatelessWidget {
                   context: context,
                   builder: (dialogContext) => AlertDialog(
                     backgroundColor: AppColors.surfaceElevated,
-                    title: const Text('Çıkış Yap', style: TextStyle(color: AppColors.textPrimary)),
-                    content: const Text(
-                      'Hesabınızdan çıkmak istiyor musunuz?',
-                      style: TextStyle(color: AppColors.textSecondary),
+                    title: Text(l10n.logoutConfirmTitle, style: const TextStyle(color: AppColors.textPrimary)),
+                    content: Text(
+                      l10n.logoutConfirmMessage,
+                      style: const TextStyle(color: AppColors.textSecondary),
                     ),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(dialogContext),
-                        child:
-                            const Text('İptal', style: TextStyle(color: AppColors.textSecondary)),
+                        child: Text(l10n.cancel, style: const TextStyle(color: AppColors.textSecondary)),
                       ),
                       TextButton(
                         onPressed: () {

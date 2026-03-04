@@ -149,6 +149,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get perWeek => 'Başına haftalık';
 
   @override
+  String get bonusPremiumAccount => 'Premium Hesap';
+
+  @override
+  String get bonusMoreMatches => 'Daha Fazla Eşleşme';
+
+  @override
+  String get bonusHighlight => 'Öne Çıkarma';
+
+  @override
+  String get bonusMoreLikes => 'Daha Fazla Beğeni';
+
+  @override
   String get top => 'TOP';
 
   @override
@@ -220,4 +232,43 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get skipButton => 'Atla';
+
+  @override
+  String get loginSubtitle => 'Kullanıcı bilgilerinle giriş yap';
+
+  @override
+  String get registerSubtitle => 'Kullanıcı bilgilerini girerek kaydol';
+
+  @override
+  String get noAccountPrompt => 'Bir hesabın yok mu?';
+
+  @override
+  String get registerLinkText => 'Kayıt Ol';
+
+  @override
+  String get hasAccountPrompt => 'Hesabınız var mı?';
+
+  @override
+  String get loginLinkText => 'Giriş yapın.';
+
+  @override
+  String get logoutConfirmTitle => 'Çıkış Yap';
+
+  @override
+  String get logoutConfirmMessage => 'Hesabınızdan çıkmak istiyor musunuz?';
+
+  @override
+  String get cancel => 'İptal';
+
+  @override
+  String get movie => 'Film';
+
+  @override
+  String get connectionError => 'Bağlantı hatası';
+
+  @override
+  String get seeMore => 'Devamı Oku';
+
+  @override
+  String get seeLess => 'Daha az';
 }

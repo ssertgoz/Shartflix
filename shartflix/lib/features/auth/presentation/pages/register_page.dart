@@ -107,7 +107,7 @@ class _RegisterViewState extends State<_RegisterView> {
                   const AuthLogo(),
                   AuthHeader(
                     title: l10n.createAccount,
-                    subtitle: 'Kullancı bilgilerini girerek kaydol',
+                    subtitle: l10n.registerSubtitle,
                   ),
                   const SizedBox(height: 36),
                   Form(
@@ -187,8 +187,8 @@ class _RegisterViewState extends State<_RegisterView> {
                   const AuthSocialButtons(),
                   const SizedBox(height: 24),
                   AuthLinkPrompt(
-                    promptText: 'Hesabınız var mı? ',
-                    linkText: 'Giriş yapın.',
+                    promptText: '${l10n.hasAccountPrompt} ',
+                    linkText: l10n.loginLinkText,
                     onLinkTap: () => context.go(AppRoutes.login),
                   ),
                   const SizedBox(height: 24),

@@ -146,10 +146,10 @@ class LimitedOfferBottomSheet extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: LimitedOfferBonusItem.premiumAccount()),
-              Expanded(child: LimitedOfferBonusItem.moreMatches()),
-              Expanded(child: LimitedOfferBonusItem.highlight()),
-              Expanded(child: LimitedOfferBonusItem.moreLikes()),
+              Expanded(child: LimitedOfferBonusItem.premiumAccount(l10n)),
+              Expanded(child: LimitedOfferBonusItem.moreMatches(l10n)),
+              Expanded(child: LimitedOfferBonusItem.highlight(l10n)),
+              Expanded(child: LimitedOfferBonusItem.moreLikes(l10n)),
             ],
           ),
         ],
