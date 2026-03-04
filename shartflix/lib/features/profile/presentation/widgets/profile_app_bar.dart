@@ -16,6 +16,45 @@ class ProfileAppBar extends StatelessWidget {
     required this.onLimitedOfferTap,
   });
 
+  /// Sliver version that floats and snaps on scroll (hides when scrolling down, appears when scrolling up).
+  static SliverAppBar sliver({
+    required AppLocalizations l10n,
+    required VoidCallback onLimitedOfferTap,
+  }) {
+    return SliverAppBar(
+      floating: true,
+      snap: true,
+      pinned: false,
+      toolbarHeight: 64,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
+      flexibleSpace: _ProfileAppBarContent(
+        l10n: l10n,
+        onLimitedOfferTap: onLimitedOfferTap,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _ProfileAppBarContent(
+      l10n: l10n,
+      onLimitedOfferTap: onLimitedOfferTap,
+    );
+  }
+}
+
+class _ProfileAppBarContent extends StatelessWidget {
+  final AppLocalizations l10n;
+  final VoidCallback onLimitedOfferTap;
+
+  const _ProfileAppBarContent({
+    required this.l10n,
+    required this.onLimitedOfferTap,
+  });
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

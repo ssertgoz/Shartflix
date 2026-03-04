@@ -110,26 +110,28 @@ class _ProfileView extends StatelessWidget {
                 );
               }
 
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ProfileAppBar(
-                      l10n: l10n,
-                      onLimitedOfferTap: () => showLimitedOfferBottomSheet(context),
-                    ),
-                    ProfileHeader(
+              return CustomScrollView(
+                slivers: [
+                  ProfileAppBar.sliver(
+                    l10n: l10n,
+                    onLimitedOfferTap: () => showLimitedOfferBottomSheet(context),
+                  ),
+                  SliverToBoxAdapter(
+                    child: ProfileHeader(
                       user: state.user,
                       isUploadingPhoto: state.isUploadingPhoto,
                       onPickPhoto: () => _navigateToPhotoUpload(context),
                       l10n: l10n,
                     ),
-                    FavoritesSection(
+                  ),
+                  SliverToBoxAdapter(
+                    child: FavoritesSection(
                       favorites: state.favorites,
                       l10n: l10n,
                     ),
-                  ],
-                ),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 100)),
+                ],
               );
             },
           ),
