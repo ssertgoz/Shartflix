@@ -49,6 +49,9 @@ dependencies:
   # Dashed border
   mobkit_dashed_border: ^0.0.8
 
+  # Inner shadow
+  inner_shadow_container: ^1.0.4
+
   # Logging
   logger: ^2.5.0
 

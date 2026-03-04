@@ -42,6 +42,12 @@ class _Images {
   String get appIcon => 'assets/images/app_icon.png';
   String get launcherIcon => 'assets/images/luncher_icon.png';
   String get photoUploadProfile => 'assets/images/photo_upload_profile.svg';
+
+  // Limited offer bonus items
+  String get limitedOfferPremium => 'assets/images/premium.svg';
+  String get limitedOfferHighlight => 'assets/images/highlight.svg';
+  String get limitedOfferMoreMatch => 'assets/images/more_match.svg';
+  String get limitedOfferMoreLike => 'assets/images/more_like.svg';
 }
 
 class _Animations {

@@ -133,6 +133,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscribeNow => 'Subscribe Now';
 
   @override
+  String get seeAllTokens => 'See All Tokens';
+
+  @override
+  String get bonusesYouGet => 'Bonuses You Will Get';
+
+  @override
+  String get selectTokenPackageToUnlock => 'Select a token package to unlock';
+
+  @override
+  String get token => 'Token';
+
+  @override
+  String get perWeek => 'Per week';
+
+  @override
   String get top => 'TOP';
 
   @override

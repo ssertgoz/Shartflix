@@ -344,6 +344,36 @@ abstract class AppLocalizations {
   /// **'Subscribe Now'**
   String get subscribeNow;
 
+  /// No description provided for @seeAllTokens.
+  ///
+  /// In en, this message translates to:
+  /// **'See All Tokens'**
+  String get seeAllTokens;
+
+  /// No description provided for @bonusesYouGet.
+  ///
+  /// In en, this message translates to:
+  /// **'Bonuses You Will Get'**
+  String get bonusesYouGet;
+
+  /// No description provided for @selectTokenPackageToUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a token package to unlock'**
+  String get selectTokenPackageToUnlock;
+
+  /// No description provided for @token.
+  ///
+  /// In en, this message translates to:
+  /// **'Token'**
+  String get token;
+
+  /// No description provided for @perWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Per week'**
+  String get perWeek;
+
   /// No description provided for @top.
   ///
   /// In en, this message translates to:

@@ -11,6 +11,7 @@ import '../../../../core/constants/app_routes.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/auth_background.dart';
+import '../../../../core/widgets/close_button_circle.dart';
 import '../../../auth/presentation/widgets/auth_button.dart';
 import '../bloc/profile_bloc.dart';
 import 'package:shartflix/l10n/app_localizations.dart';
@@ -264,28 +265,9 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
           const SizedBox(height: 12),
           Opacity(
             opacity: _selectedImage != null ? 1 : 0,
-            child: GestureDetector(
-              onTap: _removeImage,
-              child: Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.white50),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.close,
-                  color: AppColors.textPrimary,
-                  size: 24,
-                ),
-              ),
+            child: CloseButtonCircle(
+              size: 36,
+              onPressed: _selectedImage != null ? _removeImage : null,
             ),
           )
         ],

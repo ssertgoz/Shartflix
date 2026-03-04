@@ -132,6 +132,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get subscribeNow => 'Üye Olmak İçin Tıklayınız';
 
   @override
+  String get seeAllTokens => 'Tüm Jetonları Gör';
+
+  @override
+  String get bonusesYouGet => 'Alacağınız Bonuslar';
+
+  @override
+  String get selectTokenPackageToUnlock =>
+      'Kilidi açmak için bir jeton paketi seçin';
+
+  @override
+  String get token => 'Jeton';
+
+  @override
+  String get perWeek => 'Başına haftalık';
+
+  @override
   String get top => 'TOP';
 
   @override
