@@ -211,6 +211,7 @@ class _PackageOptionTokenContent extends StatelessWidget {
         ),
         Text(
           'Başına haftalık',
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: AppColors.white80,
             fontSize: 12,

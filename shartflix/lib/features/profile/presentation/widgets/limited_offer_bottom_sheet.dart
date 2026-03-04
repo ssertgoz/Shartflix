@@ -25,7 +25,7 @@ class LimitedOfferBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
+      height: 720,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
